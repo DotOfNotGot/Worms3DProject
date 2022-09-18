@@ -23,10 +23,9 @@ public class Rocket : Explosive
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (_framesExisted > 5) 
+        if (_framesExisted > 2) 
         {
             ExplosionCheck();
-            Destroy(gameObject);
         }
     }
 

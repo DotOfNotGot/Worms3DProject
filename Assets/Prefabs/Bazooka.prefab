@@ -98,4 +98,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 9093934692171033021, guid: 637e24a109918ae40a68085f6782988e,
     type: 3}
-  launchForce: 50
+  launchForce: 25

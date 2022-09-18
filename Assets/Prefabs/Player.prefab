@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 2202277161444971646}
   - component: {fileID: 2202277161444971647}
   - component: {fileID: 2202277161444971905}
+  - component: {fileID: 265789582038012776}
   - component: {fileID: 2202277161444971906}
   - component: {fileID: 5885462680847313156}
-  - component: {fileID: 2202277161444971907}
   - component: {fileID: 2202277161444971904}
   m_Layer: 3
   m_Name: Player
@@ -132,7 +132,22 @@ MonoBehaviour:
   isOnSlope: 0
   isOnSteepSlope: 0
   isJumping: 0
+  shouldAddFallSpeedMultiplier: 0
   debugRayDuration: 10
+--- !u!114 &265789582038012776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2202277161444971640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28fb800b786b7b24fb9b36e3fd7e3f4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rawMoveInput: {x: 0, y: 0}
+  rawCameraRotateInput: {x: 0, y: 0}
 --- !u!54 &2202277161444971906
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -163,19 +178,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teamIndex: 0
   unitIndex: 0
---- !u!114 &2202277161444971907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2202277161444971640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28fb800b786b7b24fb9b36e3fd7e3f4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rawMoveInput: {x: 0, y: 0}
 --- !u!114 &2202277161444971904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,6 +232,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: e3b23e42-e2af-42a6-b69f-a4c01c42eb44
     m_ActionName: Player Movement/Switch unit[/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: dac07e50-ed37-43b8-860a-9daf310ad6bf
+    m_ActionName: Player Movement/Rotate Camera[/Mouse/delta]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player Movement
@@ -246,7 +252,6 @@ GameObject:
   - component: {fileID: 2202277162036454318}
   - component: {fileID: 2202277162036454323}
   - component: {fileID: 2202277162036454316}
-  - component: {fileID: 2202277162036454317}
   m_Layer: 3
   m_Name: Facing
   m_TagString: Untagged
@@ -319,19 +324,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2202277162036454317
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2202277162036454319}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2202277163213115227
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,6 +24,7 @@ public class Explosive : MonoBehaviour
                 Destroy(collider.gameObject);
             }
         }
+        Destroy(gameObject);
     }
 
     private void OnDrawGizmos()

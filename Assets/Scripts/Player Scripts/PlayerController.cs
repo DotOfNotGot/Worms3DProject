@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     private PlayerInputManager _inputManager;
     private RaycastHit[] _groundHits;
     private RaycastHit _groundHit;
-    
+
     [Header("Player Components")]
     [SerializeField]
     private Rigidbody playerRb;
@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private Transform _cameraMainTransform;
 
 
-    
+
     [Header("Player Attributes")]
     [SerializeField]
     private float jumpForce = 100f;
@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     private float fallMultiplier = 2.5f;
     [SerializeField]
     private float groundDrag = 1f;
-    [SerializeField] 
+    [SerializeField]
     private IWeapon currentWeapon;
 
     [Header("Player Checks")]
@@ -51,18 +51,20 @@ public class PlayerController : MonoBehaviour
     private bool isOnSteepSlope;
     [SerializeField]
     private bool isJumping;
+    [SerializeField]
+    private bool shouldAddFallSpeedMultiplier;
 
     [Header("Debug Attributes")]
     [SerializeField]
     private float debugRayDuration = 10f;
-    
+
     private float _distToGround;
     private Vector3 _moveDirection;
 
     private void Awake()
     {
-        _distToGround = playerCollider.bounds.extents.y;
         _inputManager = GetComponent<PlayerInputManager>();
+        _distToGround = playerCollider.bounds.extents.y;
     }
 
     private void Start()
@@ -73,6 +75,50 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
 
+        HandleWeapon();
+
+        _moveDirection = new Vector3(_inputManager.RawMoveInput.x, 0, _inputManager.RawMoveInput.y);
+        _moveDirection = _cameraMainTransform.forward * _moveDirection.z + _cameraMainTransform.right * _moveDirection.x;
+        _moveDirection.y = 0f;
+        GroundCheck();
+        if (_inputManager.JumpAction.triggered)
+        {
+            StartCoroutine(JumpBuffer());
+        }
+
+        if (isGrounded)
+        {
+            playerRb.drag = groundDrag;
+            shouldAddFallSpeedMultiplier = false;
+        }
+        else
+        {
+            playerRb.drag = 0;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+
+        if (isGrounded && _moveDirection != Vector3.zero)
+        {
+            OnMove();
+        }
+
+        if (isJumping && isGrounded)
+        {
+            OnJump();
+        }
+
+        if (playerRb.velocity.y < 0 && !isGrounded && shouldAddFallSpeedMultiplier)
+        {
+            AddFallSpeedMultiplier();
+        }
+
+    }
+
+    private void HandleWeapon()
+    {
         if (playerRb.velocity.magnitude < -1 || playerRb.velocity.magnitude > 1)
         {
             weaponAttachPoint.gameObject.SetActive(false);
@@ -91,51 +137,7 @@ public class PlayerController : MonoBehaviour
                 weaponAttachPoint.GetChild(0).transform.localPosition = Vector3.zero;
             }
         }
-
-        _moveDirection = new Vector3(_inputManager.RawMoveInput.x, 0, _inputManager.RawMoveInput.y);
-        GroundCheck();
-        if (_inputManager.JumpAction.triggered)
-        {
-            StartCoroutine(JumpBuffer());
-        }
-
-        if (isGrounded)
-        {
-            playerRb.drag = groundDrag;
-        }
-        else
-        {
-            playerRb.drag = 0;
-        }
-        
     }
-
-    private void FixedUpdate()
-    {
-
-        if (isGrounded)
-        {
-            OnMove();
-            if (_moveDirection != Vector3.zero)
-            {
-                float targetAngle = Mathf.Atan2(_moveDirection.x, _moveDirection.z) * Mathf.Rad2Deg + _cameraMainTransform.eulerAngles.y;
-                Quaternion targetRotation = Quaternion.Euler(transform.rotation.x, targetAngle, transform.rotation.z);
-                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-            }
-        }
-        
-        if (isJumping && isGrounded)
-        {
-            OnJump();
-        }
-
-        if (playerRb.velocity.y < 0 && !isGrounded)
-        {
-            AddFallSpeedMultiplier();
-        }
-
-    }
-
     private void AddFallSpeedMultiplier()
     {
         playerRb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier) * Time.deltaTime;
@@ -144,9 +146,13 @@ public class PlayerController : MonoBehaviour
     private void OnMove()
     {
         playerRb.AddForce(_moveDirection * (speed * 20f), ForceMode.Force);
-        Vector3 clampedPlayerVelocity = Vector3.ClampMagnitude(new Vector3(playerRb.velocity.x,0,playerRb.velocity.z), maxSpeed);
+        Vector3 clampedPlayerVelocity = Vector3.ClampMagnitude(new Vector3(playerRb.velocity.x, 0, playerRb.velocity.z), maxSpeed);
         clampedPlayerVelocity = new Vector3(clampedPlayerVelocity.x, playerRb.velocity.y, clampedPlayerVelocity.z);
         playerRb.velocity = clampedPlayerVelocity;
+
+        float targetAngle = Mathf.Atan2(_inputManager.RawMoveInput.x, _inputManager.RawMoveInput.y) * Mathf.Rad2Deg + _cameraMainTransform.eulerAngles.y;
+        Quaternion targetRotation = Quaternion.Euler(transform.rotation.x, targetAngle, transform.rotation.z);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
 
     private void OnJump()
@@ -154,8 +160,9 @@ public class PlayerController : MonoBehaviour
         playerRb.velocity = new Vector3(playerRb.velocity.x, 0, playerRb.velocity.z);
         playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         isJumping = false;
+        shouldAddFallSpeedMultiplier = true;
     }
-    
+
     private IEnumerator JumpBuffer()
     {
         isJumping = true;
@@ -187,7 +194,7 @@ public class PlayerController : MonoBehaviour
                 isOnSteepSlope = false;
                 break;
             }
-            
+
             if (Vector3.Angle(transform.TransformDirection(Vector3.up), hit.normal) < maxSlopeAngle)
             {
                 isOnSlope = true;
