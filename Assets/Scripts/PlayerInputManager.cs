@@ -11,6 +11,7 @@ public class PlayerInputManager : MonoBehaviour
     private InputAction _moveAction;
     public InputAction JumpAction { get; private set; }
     public InputAction ShootAction { get; private set; }
+    public InputAction SwitchUnitAction { get; private set;}
     public Vector2 RawMoveInput { get => rawMoveInput; }
 
     // Start is called before the first frame update
@@ -21,6 +22,7 @@ public class PlayerInputManager : MonoBehaviour
         _moveAction = _playerInput.actions["Move"];
         JumpAction = _playerInput.actions["Jump"];
         ShootAction = _playerInput.actions["Shoot"];
+        SwitchUnitAction = _playerInput.actions["Switch unit"];
     }
 
     // Update is called once per frame

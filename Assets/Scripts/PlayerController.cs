@@ -14,8 +14,13 @@ public class PlayerController : MonoBehaviour
     private Rigidbody playerRb;
     [SerializeField]
     private CapsuleCollider playerCollider;
-    
+    [SerializeField]
+    private Transform weaponAttachPoint;
+
+
     private Transform _cameraMainTransform;
+
+
     
     [Header("Player Attributes")]
     [SerializeField]
@@ -35,8 +40,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float groundDrag = 1f;
     [SerializeField] 
-    private Weapon currentWeapon;
-    
+    private IWeapon currentWeapon;
+
     [Header("Player Checks")]
     [SerializeField]
     private bool isGrounded;
@@ -47,8 +52,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private bool isJumping;
 
-    private bool _shouldShoot;
-    
     [Header("Debug Attributes")]
     [SerializeField]
     private float debugRayDuration = 10f;
@@ -69,6 +72,26 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+
+        if (playerRb.velocity.magnitude < -1 || playerRb.velocity.magnitude > 1)
+        {
+            weaponAttachPoint.gameObject.SetActive(false);
+        }
+        else
+        {
+            weaponAttachPoint.gameObject.SetActive(true);
+        }
+
+        if (GetComponentInChildren<IWeapon>() != null)
+        {
+            currentWeapon = GetComponentInChildren<IWeapon>();
+            currentWeapon.SetInputManager(_inputManager);
+            if (weaponAttachPoint.GetChild(0).transform.localPosition != Vector3.zero)
+            {
+                weaponAttachPoint.GetChild(0).transform.localPosition = Vector3.zero;
+            }
+        }
+
         _moveDirection = new Vector3(_inputManager.RawMoveInput.x, 0, _inputManager.RawMoveInput.y);
         GroundCheck();
         if (_inputManager.JumpAction.triggered)
@@ -76,11 +99,6 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(JumpBuffer());
         }
 
-        if (_inputManager.ShootAction.triggered)
-        {
-            _shouldShoot = true;
-        }
-        
         if (isGrounded)
         {
             playerRb.drag = groundDrag;
@@ -111,11 +129,16 @@ public class PlayerController : MonoBehaviour
             OnJump();
         }
 
-        if (_shouldShoot)
+        if (playerRb.velocity.y < 0 && !isGrounded)
         {
-            OnShoot();
-            _shouldShoot = false;
+            AddFallSpeedMultiplier();
         }
+
+    }
+
+    private void AddFallSpeedMultiplier()
+    {
+        playerRb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier) * Time.deltaTime;
     }
 
     private void OnMove()
@@ -131,16 +154,6 @@ public class PlayerController : MonoBehaviour
         playerRb.velocity = new Vector3(playerRb.velocity.x, 0, playerRb.velocity.z);
         playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         isJumping = false;
-    }
-
-    private void OnShoot()
-    {
-
-        if (currentWeapon != null)
-        {
-            currentWeapon.Shoot();
-        }
-        
     }
     
     private IEnumerator JumpBuffer()
