@@ -27,6 +27,7 @@ public class PlayerInputManager : MonoBehaviour
         JumpAction = _playerInput.actions["Jump"];
         ShootAction = _playerInput.actions["Shoot"];
         SwitchUnitAction = _playerInput.actions["Switch Unit"];
+        
     }
 
     // Update is called once per frame
@@ -34,5 +35,8 @@ public class PlayerInputManager : MonoBehaviour
     {
         rawMoveInput = _moveAction.ReadValue<Vector2>();
         rawCameraRotateInput = _rotateCameraAction.ReadValue<Vector2>();
+        if (!ShootAction.triggered) return;
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
     }
 }

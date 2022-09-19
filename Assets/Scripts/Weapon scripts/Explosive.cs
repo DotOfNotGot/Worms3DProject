@@ -25,20 +25,21 @@ public class Explosive : MonoBehaviour
         {
             if (collider.GetComponent<Rigidbody>() != null)
             {
-                //collider.attachedRigidbody.AddExplosionForce(explosionForce * collider.attachedRigidbody.mass, transform.position, explosionRadius);
+                collider.attachedRigidbody.AddExplosionForce(explosionForce * collider.attachedRigidbody.mass, transform.position, explosionRadius);
             }
             if (collider.CompareTag("Destroyable"))
             {
-                _terrainDestruction.GetTerrainToDestroy(collider.gameObject);
+                //_terrainDestruction.GetTerrainToDestroy(collider.gameObject);
             }
         }
-        //Destroy(gameObject);
+        Destroy(gameObject);
     }
-
+    
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(transform.position, explosionRadius);
     }
-
+#endif
 }

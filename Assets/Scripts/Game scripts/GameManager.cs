@@ -56,6 +56,8 @@ public class GameManager : MonoBehaviour
             {
                 currentTurnIndex = 0;
             }
+
+            currentUnitIndex = 0;
             _turnTimer.ResetTurnTimer();
         }
 
@@ -91,7 +93,7 @@ public class GameManager : MonoBehaviour
         teams = new List<GameObject>();
         _units = new List<List<GameObject>>();
         serializedUnitsList = new List<GameObject>();
-
+        
         // Gets a list of all teams in scene.
         foreach (Transform transform in transform.GetChild(0).transform)
         {

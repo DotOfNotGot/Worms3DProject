@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class Bazooka : MonoBehaviour, IWeapon
 {
-
-
     private PlayerInputManager _inputManager;
 
-    [SerializeField]
-    private GameObject projectilePrefab;
-    [SerializeField]
-    private float launchForce = 50f;
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private float launchForce = 50f;
 
     private float _launchForceModifier = 0f;
 
@@ -20,21 +16,24 @@ public class Bazooka : MonoBehaviour, IWeapon
 
     private void Update()
     {
-
         if (_inputManager == null)
         {
             return;
         }
 
-        if (_inputManager.ShootAction.triggered && _chargeLaunchForce)
+        if (!_inputManager.ShootAction.triggered) return;
+        
+        
+        if (_chargeLaunchForce)
         {
             _shouldShoot = true;
         }
 
-        if (_inputManager.ShootAction.triggered && !_chargeLaunchForce)
+        if (!_chargeLaunchForce)
         {
             _chargeLaunchForce = true;
         }
+        
     }
 
     private void FixedUpdate()
@@ -63,5 +62,4 @@ public class Bazooka : MonoBehaviour, IWeapon
     {
         _inputManager = newInputManager;
     }
-
 }

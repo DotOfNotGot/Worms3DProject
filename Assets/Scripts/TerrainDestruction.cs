@@ -9,6 +9,7 @@ using UnityEngine.ProBuilder.Shapes;
 public class TerrainDestruction : MonoBehaviour
 {
 
+    /*
     [SerializeField]
     private ProBuilderMesh terrainToDestroy;
 
@@ -114,6 +115,7 @@ public class TerrainDestruction : MonoBehaviour
 
         
     }
+    */
 
 
 }
