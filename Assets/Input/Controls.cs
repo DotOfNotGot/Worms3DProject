@@ -174,6 +174,98 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Menu controls"",
+            ""id"": ""975aba2f-e821-4285-82e1-561c7127f115"",
+            ""actions"": [
+                {
+                    ""name"": ""Navigate Menu"",
+                    ""type"": ""Value"",
+                    ""id"": ""6498cbed-0ed9-4dbf-9d2c-551345edc711"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Select"",
+                    ""type"": ""Button"",
+                    ""id"": ""cccafe33-901c-45bb-9a12-680fabc8b62c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""Keyboard"",
+                    ""id"": ""1460ba26-5d4f-42f9-ad43-f37d482cad8e"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Navigate Menu"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""c993cb34-111b-4dfe-b56f-12e34ee7e119"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Navigate Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""0ada9f0b-b35a-433d-87c9-10ea42d4b7ee"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Navigate Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""7bdee964-ba3a-4c98-84c9-21e7b75884d5"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Navigate Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""5e9cdf06-6431-489e-84ba-ffd8d5b30e59"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Navigate Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""869cce27-0fbc-49e5-942f-ea6b969f5d9e"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -185,6 +277,10 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_PlayerMovement_Shoot = m_PlayerMovement.FindAction("Shoot", throwIfNotFound: true);
         m_PlayerMovement_SwitchUnit = m_PlayerMovement.FindAction("Switch Unit", throwIfNotFound: true);
         m_PlayerMovement_RotateCamera = m_PlayerMovement.FindAction("Rotate Camera", throwIfNotFound: true);
+        // Menu controls
+        m_Menucontrols = asset.FindActionMap("Menu controls", throwIfNotFound: true);
+        m_Menucontrols_NavigateMenu = m_Menucontrols.FindAction("Navigate Menu", throwIfNotFound: true);
+        m_Menucontrols_Select = m_Menucontrols.FindAction("Select", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -305,6 +401,47 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         }
     }
     public PlayerMovementActions @PlayerMovement => new PlayerMovementActions(this);
+
+    // Menu controls
+    private readonly InputActionMap m_Menucontrols;
+    private IMenucontrolsActions m_MenucontrolsActionsCallbackInterface;
+    private readonly InputAction m_Menucontrols_NavigateMenu;
+    private readonly InputAction m_Menucontrols_Select;
+    public struct MenucontrolsActions
+    {
+        private @Controls m_Wrapper;
+        public MenucontrolsActions(@Controls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @NavigateMenu => m_Wrapper.m_Menucontrols_NavigateMenu;
+        public InputAction @Select => m_Wrapper.m_Menucontrols_Select;
+        public InputActionMap Get() { return m_Wrapper.m_Menucontrols; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MenucontrolsActions set) { return set.Get(); }
+        public void SetCallbacks(IMenucontrolsActions instance)
+        {
+            if (m_Wrapper.m_MenucontrolsActionsCallbackInterface != null)
+            {
+                @NavigateMenu.started -= m_Wrapper.m_MenucontrolsActionsCallbackInterface.OnNavigateMenu;
+                @NavigateMenu.performed -= m_Wrapper.m_MenucontrolsActionsCallbackInterface.OnNavigateMenu;
+                @NavigateMenu.canceled -= m_Wrapper.m_MenucontrolsActionsCallbackInterface.OnNavigateMenu;
+                @Select.started -= m_Wrapper.m_MenucontrolsActionsCallbackInterface.OnSelect;
+                @Select.performed -= m_Wrapper.m_MenucontrolsActionsCallbackInterface.OnSelect;
+                @Select.canceled -= m_Wrapper.m_MenucontrolsActionsCallbackInterface.OnSelect;
+            }
+            m_Wrapper.m_MenucontrolsActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @NavigateMenu.started += instance.OnNavigateMenu;
+                @NavigateMenu.performed += instance.OnNavigateMenu;
+                @NavigateMenu.canceled += instance.OnNavigateMenu;
+                @Select.started += instance.OnSelect;
+                @Select.performed += instance.OnSelect;
+                @Select.canceled += instance.OnSelect;
+            }
+        }
+    }
+    public MenucontrolsActions @Menucontrols => new MenucontrolsActions(this);
     public interface IPlayerMovementActions
     {
         void OnMove(InputAction.CallbackContext context);
@@ -312,5 +449,10 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnShoot(InputAction.CallbackContext context);
         void OnSwitchUnit(InputAction.CallbackContext context);
         void OnRotateCamera(InputAction.CallbackContext context);
+    }
+    public interface IMenucontrolsActions
+    {
+        void OnNavigateMenu(InputAction.CallbackContext context);
+        void OnSelect(InputAction.CallbackContext context);
     }
 }
