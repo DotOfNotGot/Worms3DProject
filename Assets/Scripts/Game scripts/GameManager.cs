@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Json;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +9,14 @@ public class GameManager : MonoBehaviour
 
     private PlayerInputManager _currentInputManager;
     private TurnTimer _turnTimer;
+
+    [SerializeField]
+    private MatchInfo _matchInfo;
+
+    [SerializeField]
+    private GameObject teamPrefab;
+    [SerializeField]
+    private Object playerPrefab;
 
     [SerializeField]
     private List<GameObject> teams;
@@ -20,12 +29,12 @@ public class GameManager : MonoBehaviour
     [SerializeField, Range(0,3)]
     private int currentTurnIndex = 0, currentUnitIndex = 0;
 
+
     public int CurrentTurnIndex { get => currentTurnIndex; }
     public List<List<GameObject>> Units { get => _units; }
 
 
-
-    private void Awake()
+    private void Start()
     {
         SetTeams();
         _turnTimer = GetComponent<TurnTimer>();
@@ -90,6 +99,32 @@ public class GameManager : MonoBehaviour
 
     private void SetTeams()
     {
+        _matchInfo = MatchInfo.Instance;
+        if (_matchInfo != null)
+        {
+            for (int i = 0; i < _matchInfo.AmountOfPlayers; i++)
+            {
+                var currentTeam= Instantiate(teamPrefab, transform.GetChild(0), true);
+                for (int j = 0; j < _matchInfo.AmountOfUnits; j++)
+                {
+                    Instantiate(playerPrefab, currentTeam.transform, true);
+                    transform.position += new Vector3(j, 0, i);
+                }
+            } 
+        }
+        else
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                var currentTeam= Instantiate(teamPrefab, transform.GetChild(0), true);
+                for (int j = 0; j < 1; j++)
+                {
+                    Instantiate(playerPrefab, currentTeam.transform, true);
+                    transform.position += new Vector3(j, 0, i);
+                }
+            } 
+        }
+               
         teams = new List<GameObject>();
         _units = new List<List<GameObject>>();
         serializedUnitsList = new List<GameObject>();

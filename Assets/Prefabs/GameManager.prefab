@@ -46,6 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dccabb5dc12683a47b87466c82cceb21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _matchInfo: {fileID: 0}
+  teamPrefab: {fileID: 7797157590308758961, guid: 24c8297a77e861449b1858acf7c44052,
+    type: 3}
+  playerPrefab: {fileID: 2202277161444971640, guid: 5512d78d4c7b569439da9a55821a1961,
+    type: 3}
   teams: []
   serializedUnitsList: []
   currentTurnIndex: 0

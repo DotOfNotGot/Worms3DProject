@@ -2765,6 +2765,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8e2c0503df01414b97d3bb23024b074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  amountOfPlayers: 0
+  amountOfUnits: 0
+  turnTimerLength: 0
 --- !u!1 &1774900163
 GameObject:
   m_ObjectHideFlags: 0
@@ -3629,7 +3632,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 394fa2f74eaa0aa4096f1b4b7b217ee3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  matchInfo: {fileID: 1557378256}
   teamsDropdown: {fileID: 893203053}
   unitsDropdown: {fileID: 266774120}
   amountOfTeams: 0
   amountOfUnits: 0
+  turnTimerLength: 0
