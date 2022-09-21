@@ -57,7 +57,10 @@ public class CameraHandler : MonoBehaviour
 
     private void Update()
     {
-        currentInputManager = gameManager.GetCurrentInputManager();
+        if (gameManager != null)
+        {
+            currentInputManager = gameManager.GetCurrentInputManager();
+        }
         _rotationInput = new Vector2(currentInputManager.RawCameraRotateInput.y, currentInputManager.RawCameraRotateInput.x);
     }
 
@@ -133,7 +136,10 @@ public class CameraHandler : MonoBehaviour
 
     private void UpdateFocusPoint()
     {
-        focus = gameManager.GetCameraFollowTarget();
+        if (gameManager != null)
+        {
+            focus = gameManager.GetCameraFollowTarget();
+        }
         Vector3 targetPoint = focus.position;
         if (focusRadius > 0f)
         {

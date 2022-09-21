@@ -40,11 +40,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float groundDrag = 1f;
     [SerializeField]
-    private IWeapon currentWeapon;
+    private Weapon currentWeapon;
+    [SerializeField]
+    private WeaponSelector playerWeaponSelector;
 
     [Header("Player Checks")]
     [SerializeField]
     private bool isGrounded;
+    private bool _wasGroundedPreviousFrame;
     [SerializeField]
     private bool isOnSlope;
     [SerializeField]
@@ -53,6 +56,12 @@ public class PlayerController : MonoBehaviour
     private bool isJumping;
     [SerializeField]
     private bool shouldAddFallSpeedMultiplier;
+    [SerializeField]
+    private int framesGrounded;
+
+    public bool IsGrounded { get => isGrounded; }
+    public bool WasGroundedPreviousFrame { get => _wasGroundedPreviousFrame; }
+    public int FramesGrounded { get => framesGrounded; }
 
     [Header("Debug Attributes")]
     [SerializeField]
@@ -80,7 +89,7 @@ public class PlayerController : MonoBehaviour
         _moveDirection = new Vector3(_inputManager.RawMoveInput.x, 0, _inputManager.RawMoveInput.y);
         _moveDirection = _cameraMainTransform.forward * _moveDirection.z + _cameraMainTransform.right * _moveDirection.x;
         _moveDirection.y = 0f;
-        GroundCheck();
+
         if (_inputManager.JumpAction.triggered)
         {
             StartCoroutine(JumpBuffer());
@@ -90,6 +99,7 @@ public class PlayerController : MonoBehaviour
         {
             playerRb.drag = groundDrag;
             shouldAddFallSpeedMultiplier = false;
+
         }
         else
         {
@@ -99,6 +109,17 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isGrounded)
+        {
+            _wasGroundedPreviousFrame = true;
+            framesGrounded++;
+        }
+        else
+        {
+            _wasGroundedPreviousFrame = false;
+            framesGrounded = 0;
+        }
+        GroundCheck();
 
         if (isGrounded && _moveDirection != Vector3.zero)
         {
@@ -110,6 +131,7 @@ public class PlayerController : MonoBehaviour
             OnJump();
         }
 
+
         if (playerRb.velocity.y < 0 && !isGrounded && shouldAddFallSpeedMultiplier)
         {
             AddFallSpeedMultiplier();
@@ -117,30 +139,37 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void ResetGroundedTimer()
+    {
+        framesGrounded = 0;
+    }
+
     private void HandleWeapon()
     {
+        //if (weaponAttachPoint.GetChild(0).transform.localPosition != Vector3.zero)
+        //{
+        //    weaponAttachPoint.GetChild(0).transform.localPosition = Vector3.zero;
+        //}
+
+        currentWeapon = playerWeaponSelector.GetCurrentWeapon();
+        playerWeaponSelector.SetInputManager(_inputManager);
+
+        if (currentWeapon == null) return;
+
         if (playerRb.velocity.magnitude < -1 || playerRb.velocity.magnitude > 1)
         {
-            weaponAttachPoint.gameObject.SetActive(false);
+            currentWeapon.gameObject.SetActive(false);
         }
         else
         {
-            weaponAttachPoint.gameObject.SetActive(true);
+            currentWeapon.gameObject.SetActive(true);
         }
 
-        if (GetComponentInChildren<IWeapon>() != null)
-        {
-            currentWeapon = GetComponentInChildren<IWeapon>();
-            currentWeapon.SetInputManager(_inputManager);
-            if (weaponAttachPoint.GetChild(0).transform.localPosition != Vector3.zero)
-            {
-                weaponAttachPoint.GetChild(0).transform.localPosition = Vector3.zero;
-            }
-        }
+        
     }
     private void AddFallSpeedMultiplier()
     {
-        playerRb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier) * Time.deltaTime;
+        playerRb.velocity += (fallMultiplier) * Physics.gravity.y * Time.deltaTime * Vector3.up;
     }
 
     private void OnMove()

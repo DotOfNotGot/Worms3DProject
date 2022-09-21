@@ -71,6 +71,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Open Weapon Selector"",
+                    ""type"": ""Button"",
+                    ""id"": ""dd7fdae4-73a4-4a8d-a67e-0bf928b99667"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -170,6 +179,17 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Rotate Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""86f4f3cf-bd09-4398-95ff-56dcddeb2dbb"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Open Weapon Selector"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -277,6 +297,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_PlayerMovement_Shoot = m_PlayerMovement.FindAction("Shoot", throwIfNotFound: true);
         m_PlayerMovement_SwitchUnit = m_PlayerMovement.FindAction("Switch Unit", throwIfNotFound: true);
         m_PlayerMovement_RotateCamera = m_PlayerMovement.FindAction("Rotate Camera", throwIfNotFound: true);
+        m_PlayerMovement_OpenWeaponSelector = m_PlayerMovement.FindAction("Open Weapon Selector", throwIfNotFound: true);
         // Menu controls
         m_Menucontrols = asset.FindActionMap("Menu controls", throwIfNotFound: true);
         m_Menucontrols_NavigateMenu = m_Menucontrols.FindAction("Navigate Menu", throwIfNotFound: true);
@@ -345,6 +366,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerMovement_Shoot;
     private readonly InputAction m_PlayerMovement_SwitchUnit;
     private readonly InputAction m_PlayerMovement_RotateCamera;
+    private readonly InputAction m_PlayerMovement_OpenWeaponSelector;
     public struct PlayerMovementActions
     {
         private @Controls m_Wrapper;
@@ -354,6 +376,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @Shoot => m_Wrapper.m_PlayerMovement_Shoot;
         public InputAction @SwitchUnit => m_Wrapper.m_PlayerMovement_SwitchUnit;
         public InputAction @RotateCamera => m_Wrapper.m_PlayerMovement_RotateCamera;
+        public InputAction @OpenWeaponSelector => m_Wrapper.m_PlayerMovement_OpenWeaponSelector;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -378,6 +401,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @RotateCamera.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnRotateCamera;
                 @RotateCamera.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnRotateCamera;
                 @RotateCamera.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnRotateCamera;
+                @OpenWeaponSelector.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnOpenWeaponSelector;
+                @OpenWeaponSelector.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnOpenWeaponSelector;
+                @OpenWeaponSelector.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnOpenWeaponSelector;
             }
             m_Wrapper.m_PlayerMovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -397,6 +423,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @RotateCamera.started += instance.OnRotateCamera;
                 @RotateCamera.performed += instance.OnRotateCamera;
                 @RotateCamera.canceled += instance.OnRotateCamera;
+                @OpenWeaponSelector.started += instance.OnOpenWeaponSelector;
+                @OpenWeaponSelector.performed += instance.OnOpenWeaponSelector;
+                @OpenWeaponSelector.canceled += instance.OnOpenWeaponSelector;
             }
         }
     }
@@ -449,6 +478,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnShoot(InputAction.CallbackContext context);
         void OnSwitchUnit(InputAction.CallbackContext context);
         void OnRotateCamera(InputAction.CallbackContext context);
+        void OnOpenWeaponSelector(InputAction.CallbackContext context);
     }
     public interface IMenucontrolsActions
     {

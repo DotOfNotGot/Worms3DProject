@@ -15,10 +15,14 @@ public class TurnTimer : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI timerElement;
 
+    private void Awake()
+    {
+        SetStoredTimerDuration(durationInSeconds);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        _storedStartDuration = durationInSeconds;
        UpdateTimerDisplay();
     }
 
@@ -40,6 +44,11 @@ public class TurnTimer : MonoBehaviour
     public void ResetTurnTimer()
     {
         durationInSeconds = _storedStartDuration;
+    }
+
+    public void SetStoredTimerDuration(float timerStartDuration)
+    {
+        _storedStartDuration = timerStartDuration;
     }
 
 }

@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject teamPrefab;
     [SerializeField]
-    private Object playerPrefab;
+    private GameObject playerPrefab;
 
     [SerializeField]
     private List<GameObject> teams;
@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<GameObject> serializedUnitsList;
 
-    [SerializeField, Range(0,3)]
+    [SerializeField, Range(0, 3)]
     private int currentTurnIndex = 0, currentUnitIndex = 0;
 
 
@@ -36,8 +36,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        SetTeams();
         _turnTimer = GetComponent<TurnTimer>();
+        PrepareMatch();
     }
 
     // Update is called once per frame
@@ -53,8 +53,12 @@ public class GameManager : MonoBehaviour
             {
                 currentUnitIndex = 0;
             }
+            SetNonActiveUnitsKinematic(CurrentTurnIndex);
         }
+    }
 
+    private void FixedUpdate()
+    {
         if (_turnTimer.DurationInSeconds <= 0f)
         {
             if (currentTurnIndex + 1 != teams.Count)
@@ -68,8 +72,46 @@ public class GameManager : MonoBehaviour
 
             currentUnitIndex = 0;
             _turnTimer.ResetTurnTimer();
+            DisableUnitsGUI();
         }
+        SetNonActiveTeamsKinematic();
 
+    }
+
+    private void DisableUnitsGUI()
+    {
+        for (int j = 0; j < teams.Count; j++)
+        {
+            for (int i = 0; i < _units[j].Count; i++)
+            {
+                _units[j][i].GetComponentInChildren<WeaponSelector>().DisableWeaponSelectorObject();
+            }
+        }
+    }
+
+    private void SetNonActiveTeamsKinematic()
+    {
+        for (int j = 0; j < teams.Count; j++)
+        {
+            SetNonActiveUnitsKinematic(j);
+        }
+    }
+
+    private void SetNonActiveUnitsKinematic(int teamIndex)
+    {
+        for (int i = 0; i < _units[teamIndex].Count; i++)
+        {
+            var indexPlayerController = _units[teamIndex][i].GetComponent<PlayerController>();
+
+            if (teamIndex == currentTurnIndex && i == currentUnitIndex)
+            {
+                _units[teamIndex][i].GetComponent<Rigidbody>().isKinematic = false;
+            }
+            else if (indexPlayerController.IsGrounded && indexPlayerController.FramesGrounded > 50)
+            {
+                indexPlayerController.GetComponent<Rigidbody>().isKinematic = true;
+            }
+        }
     }
 
     public Transform GetCameraFollowTarget()
@@ -97,38 +139,42 @@ public class GameManager : MonoBehaviour
         return _units[currentTurnIndex][currentUnitIndex].GetComponent<PlayerInputManager>();
     }
 
-    private void SetTeams()
+    private void PrepareMatch()
     {
         _matchInfo = MatchInfo.Instance;
         if (_matchInfo != null)
         {
+            _turnTimer.SetStoredTimerDuration(_matchInfo.TurnTimerLength);
+
             for (int i = 0; i < _matchInfo.AmountOfPlayers; i++)
             {
-                var currentTeam= Instantiate(teamPrefab, transform.GetChild(0), true);
+                var currentTeam = Instantiate(teamPrefab, transform.GetChild(0));
                 for (int j = 0; j < _matchInfo.AmountOfUnits; j++)
                 {
-                    Instantiate(playerPrefab, currentTeam.transform, true);
-                    transform.position += new Vector3(j, 0, i);
+                    var currentUnit = Instantiate(playerPrefab, currentTeam.transform);
+                    currentUnit.transform.localPosition += new Vector3(j * 3f, 0, i * 3f);
                 }
-            } 
+            }
         }
         else
         {
             for (int i = 0; i < 4; i++)
             {
-                var currentTeam= Instantiate(teamPrefab, transform.GetChild(0), true);
-                for (int j = 0; j < 1; j++)
+                var currentTeam = Instantiate(teamPrefab, transform.GetChild(0));
+                for (int j = 0; j < 2; j++)
                 {
-                    Instantiate(playerPrefab, currentTeam.transform, true);
-                    transform.position += new Vector3(j, 0, i);
+                    var currentUnit = Instantiate(playerPrefab, currentTeam.transform);
+                    currentUnit.transform.localPosition += new Vector3(j * 3f, 0, i * 3f);
                 }
-            } 
+            }
         }
-               
+
+        _turnTimer.ResetTurnTimer();
+
         teams = new List<GameObject>();
         _units = new List<List<GameObject>>();
         serializedUnitsList = new List<GameObject>();
-        
+
         // Gets a list of all teams in scene.
         foreach (Transform transform in transform.GetChild(0).transform)
         {
@@ -143,26 +189,21 @@ public class GameManager : MonoBehaviour
             {
                 _units[j].Add(teams[j].transform.GetChild(i).gameObject);
             }
-        }
 
-        // Sets each units team index and unit index.
-        for (int j = 0; j < _units.Count; j++)
-        {
+            // Sets each units team index and unit index.
             for (int i = 0; i < _units[j].Count; i++)
             {
                 var currentUnitInformation = _units[j][i].GetComponent<UnitInformation>();
                 currentUnitInformation.SetIndexes(j, i);
             }
-        }
 
-        // Gets all units from nested list so that they can be shown in editor. Will be removed later as it has no other purpose.
-        for (int i = 0; i < _units.Count; i++)
-        {
-            foreach (GameObject gameObject in _units[i])
+            // Gets all units from nested list so that they can be shown in editor. Will be removed later as it has no other purpose.
+            foreach (GameObject gameObject in _units[j])
             {
                 serializedUnitsList.Add(gameObject);
             }
         }
+
     }
 
 }

@@ -14,12 +14,15 @@ public class PlayerInputManager : MonoBehaviour
     public InputAction JumpAction { get; private set; }
     public InputAction ShootAction { get; private set; }
     public InputAction SwitchUnitAction { get; private set;}
+    public InputAction OpenWeaponSelectorAction { get; private set; }
     public Vector2 RawMoveInput { get => rawMoveInput; }
     public Vector2 RawCameraRotateInput { get => rawCameraRotateInput; }
 
     // Start is called before the first frame update
     void Awake()
     {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
         _playerInput = GetComponent<PlayerInput>();
 
         _moveAction = _playerInput.actions["Move"];
@@ -27,6 +30,7 @@ public class PlayerInputManager : MonoBehaviour
         JumpAction = _playerInput.actions["Jump"];
         ShootAction = _playerInput.actions["Shoot"];
         SwitchUnitAction = _playerInput.actions["Switch Unit"];
+        OpenWeaponSelectorAction = _playerInput.actions["Open Weapon Selector"];
         
     }
 
@@ -35,8 +39,12 @@ public class PlayerInputManager : MonoBehaviour
     {
         rawMoveInput = _moveAction.ReadValue<Vector2>();
         rawCameraRotateInput = _rotateCameraAction.ReadValue<Vector2>();
-        if (!ShootAction.triggered) return;
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = false;
+        
     }
+
+    public void ToggleInputOn(bool desiredState)
+    {
+        _playerInput.enabled = desiredState;
+    }
+
 }

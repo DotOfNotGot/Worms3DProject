@@ -20,12 +20,6 @@ public class UnitInformation : MonoBehaviour
         SetUnitColor();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     // Sets the indexes of the unit.
     public void SetIndexes(int newTeamIndex, int newUnitIndex)
     {
