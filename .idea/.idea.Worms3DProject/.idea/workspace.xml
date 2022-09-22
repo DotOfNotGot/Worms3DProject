@@ -48,10 +48,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="1548">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="13772">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="1548" />
+      <option name="pid" value="13772" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -71,6 +71,7 @@
       <workItem from="1663580898924" duration="3955000" />
       <workItem from="1663590148346" duration="3052000" />
       <workItem from="1663669045137" duration="3522000" />
+      <workItem from="1663851007469" duration="2733000" />
     </task>
     <servers />
   </component>
@@ -93,5 +94,37 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/Weapon scripts/WeaponSelector.cs</url>
+          <line>84</line>
+          <properties documentPath="C:\Users\max.ekberg\Documents\GitHub\Worms3DProject\Assets\Scripts\Weapon scripts\WeaponSelector.cs" initialLine="86" containingFunctionPresentation="method 'CancelWeaponSelect'">
+            <startOffsets>
+              <option value="2320" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2354" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/Player Scripts/PlayerInputManager.cs</url>
+          <line>46</line>
+          <properties documentPath="C:\Users\max.ekberg\Documents\GitHub\Worms3DProject\Assets\Scripts\Player Scripts\PlayerInputManager.cs" initialLine="46" containingFunctionPresentation="method 'ToggleInputOn'">
+            <startOffsets>
+              <option value="1638" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1674" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

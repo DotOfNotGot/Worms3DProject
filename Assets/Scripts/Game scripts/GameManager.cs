@@ -53,6 +53,8 @@ public class GameManager : MonoBehaviour
             {
                 currentUnitIndex = 0;
             }
+
+            GetCurrentInputManager();
             SetNonActiveUnitsKinematic(CurrentTurnIndex);
         }
         SetNonActiveUnitsInput();
@@ -80,6 +82,17 @@ public class GameManager : MonoBehaviour
 
     private void SetNonActiveUnitsInput()
     {
+        for (int j = 0; j < teams.Count; j++)
+        {
+            for (int i = 0; i < _units[j].Count; i++)
+            {
+                if (_units[j][i].GetComponent<PlayerInputManager>() != _currentInputManager)
+                {
+                    _units[j][i].GetComponent<PlayerInputManager>().ToggleInputOn(false);
+                }
+            }
+        }
+        
         for (int j = 0; j < teams.Count; j++)
         {
             for (int i = 0; i < _units[j].Count; i++)
@@ -139,22 +152,8 @@ public class GameManager : MonoBehaviour
 
     public PlayerInputManager GetCurrentInputManager()
     {
-        for (int j = 0; j < teams.Count; j++)
-        {
-            for (int i = 0; i < _units[j].Count; i++)
-            {
-                if (j == currentTurnIndex && i == currentUnitIndex)
-                {
-                    _units[j][i].GetComponent<PlayerInput>().enabled = true;
-                }
-                else
-                {
-                    _units[j][i].GetComponent<PlayerInput>().enabled = false;
-                }
-            }
-        }
         _currentInputManager = _units[currentTurnIndex][currentUnitIndex].GetComponent<PlayerInputManager>();
-        return _units[currentTurnIndex][currentUnitIndex].GetComponent<PlayerInputManager>();
+        return _currentInputManager;
     }
 
     private void PrepareMatch()

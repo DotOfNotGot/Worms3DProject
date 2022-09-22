@@ -75,8 +75,6 @@ public class WeaponSelector : MonoBehaviour
         {
             _currentWeapon = weapons[weaponsUIList.value];
         }
-
-        
     }
 
     public void CancelWeaponSelect()

@@ -13,7 +13,7 @@ public class Chargeable : Weapon
     private bool _localShootActionState;
     private bool _localShootActionStatePreviousFrame;
 
-    public void HandleCharging()
+    private void HandleCharging()
     {
         _localShootActionStatePreviousFrame = _localShootActionState;
         _localShootActionState = ShootActionState;
@@ -31,8 +31,17 @@ public class Chargeable : Weapon
             _shouldShoot = true;
         }
     }
+    private void Update()
+    {
+        HandleWeaponInputs();
+        HandleCharging();
+    }
 
-    public void UseChargedWeapon()
+    private void FixedUpdate()
+    {
+        UseChargedWeapon();
+    }
+    private void UseChargedWeapon()
     {
         if (_chargeLaunchForce)
         {
