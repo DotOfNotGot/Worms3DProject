@@ -4,7 +4,6 @@ using UnityEngine;
 using TMPro;
 public class WeaponSelector : MonoBehaviour
 {
-
     private PlayerInputManager _inputManager;
 
     [SerializeField]
@@ -12,6 +11,8 @@ public class WeaponSelector : MonoBehaviour
 
     [SerializeField]
     private GameObject weaponSelectorObject;
+
+    private UnitsInputSetter _unitsInputSetter;
 
     [SerializeField]
     private List<Weapon> weapons;
@@ -25,21 +26,22 @@ public class WeaponSelector : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _unitsInputSetter = GetComponentInParent<UnitsInputSetter>();
+        // Instantiates weapons list objects in every unit.
         foreach (var weapon in weapons)
         {
             if (weapon != null)
             {
                 var currentWeaponGameObject = Instantiate(weapon.gameObject, gameObject.transform);
-                currentWeaponGameObject.SetActive(false);
                 weaponGOs.Add(currentWeaponGameObject);
             }
             else
             {
                 var currentWeaponGameObject = Instantiate(new GameObject(), gameObject.transform);
-                currentWeaponGameObject.SetActive(false);
                 weaponGOs.Add(currentWeaponGameObject);
             }
         }
+        TurnWeaponsOff();
     }
 
     private void Update()
@@ -48,8 +50,7 @@ public class WeaponSelector : MonoBehaviour
 
         if (_inputManager.OpenWeaponSelectorAction.triggered)
         {
-            _inputManager.ToggleInputOn(false);
-            _inputManager.enabled = false;
+            _unitsInputSetter.DisableUnitInput(_inputManager);
             weaponSelectorObject.SetActive(true);
             Cursor.visible = true;
         }
@@ -69,20 +70,19 @@ public class WeaponSelector : MonoBehaviour
             _currentWeaponGameObject = weaponGOs[weaponsUIList.value];
             _currentWeapon = _currentWeaponGameObject.GetComponent<Weapon>();
             _currentWeaponGameObject.SetActive(true);
-            _currentWeapon.SetInputManager(_inputManager);
         }
         else
         {
             _currentWeapon = weapons[weaponsUIList.value];
         }
+        gameObject.GetComponentInParent<PlayerController>().SetCurrentWeapon(_currentWeapon);
     }
 
     public void CancelWeaponSelect()
     {
         weaponSelectorObject.SetActive(false);
         Cursor.visible = false;
-        _inputManager.enabled = true;
-        _inputManager.ToggleInputOn(true);
+        _unitsInputSetter.EnableUnitInput(_inputManager);
     }
 
     public void DisableWeaponSelectorObject()
@@ -94,6 +94,7 @@ public class WeaponSelector : MonoBehaviour
     {
         return _currentWeapon;
     }
+
     public void SetInputManager(PlayerInputManager newInputManager)
     {
         _inputManager = newInputManager;

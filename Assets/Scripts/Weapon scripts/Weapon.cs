@@ -21,6 +21,11 @@ public class Weapon : MonoBehaviour
     private bool shootActionState;
     public bool ShootActionState { get => shootActionState; }
 
+    private void Awake()
+    {
+        SetInputManager();
+    }
+
     public void HandleWeaponInputs()
     {
         if (_currentInputManager == null)
@@ -68,8 +73,8 @@ public class Weapon : MonoBehaviour
         _currentInputManager.enabled = false;
     }
 
-    public void SetInputManager(PlayerInputManager newInputManager)
+    private void SetInputManager()
     {
-        _currentInputManager = newInputManager;
+        _currentInputManager = GetComponentInParent<PlayerInputManager>();
     }
 }

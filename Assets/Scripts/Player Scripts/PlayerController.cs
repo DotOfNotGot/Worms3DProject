@@ -107,6 +107,9 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+        HandleWeapon();
+
         if (isGrounded)
         {
             _wasGroundedPreviousFrame = true;
@@ -142,17 +145,14 @@ public class PlayerController : MonoBehaviour
         framesGrounded = 0;
     }
 
-    public void HandleWeapon()
+    public void SetCurrentWeapon(Weapon newWeapon)
     {
-        //if (weaponAttachPoint.GetChild(0).transform.localPosition != Vector3.zero)
-        //{
-        //    weaponAttachPoint.GetChild(0).transform.localPosition = Vector3.zero;
-        //}
-
-        currentWeapon = playerWeaponSelector.GetCurrentWeapon();
-        
+        currentWeapon = newWeapon;
         playerWeaponSelector.SetInputManager(_inputManager);
+    }
 
+    private void HandleWeapon()
+    {
         if (currentWeapon == null) return;
 
         if (playerRb.velocity.magnitude < -1 || playerRb.velocity.magnitude > 1)

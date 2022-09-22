@@ -39,7 +39,6 @@ public class PlayerInputManager : MonoBehaviour
     {
         rawMoveInput = _moveAction.ReadValue<Vector2>();
         rawCameraRotateInput = _rotateCameraAction.ReadValue<Vector2>();
-        
     }
 
     public void ToggleInputOn(bool desiredState)

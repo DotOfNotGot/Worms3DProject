@@ -926,6 +926,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 637e24a109918ae40a68085f6782988e, type: 3}
+--- !u!114 &1796717769 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6262861839854065860, guid: 45c8d2ec6558df1409ee1b657a5b472d,
+    type: 3}
+  m_PrefabInstance: {fileID: 6262861840132181256}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32a804b37acc6743bebb532b3f8eb56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1879175637 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2913024375757928085, guid: 2cfc8a8c93750794eaae3f228162d2ea,
@@ -1135,6 +1147,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7797157590308758961, guid: 24c8297a77e861449b1858acf7c44052,
         type: 3}
+    - target: {fileID: 2913024375757928085, guid: 2cfc8a8c93750794eaae3f228162d2ea,
+        type: 3}
+      propertyPath: sceneCamera
+      value: 
+      objectReference: {fileID: 1796717769}
     - target: {fileID: 2913024375757928086, guid: 2cfc8a8c93750794eaae3f228162d2ea,
         type: 3}
       propertyPath: m_RootOrder
@@ -1195,6 +1212,11 @@ PrefabInstance:
       propertyPath: timerElement
       value: 
       objectReference: {fileID: 227581744}
+    - target: {fileID: 2913024375757928088, guid: 2cfc8a8c93750794eaae3f228162d2ea,
+        type: 3}
+      propertyPath: durationInSeconds
+      value: 1000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2cfc8a8c93750794eaae3f228162d2ea, type: 3}
 --- !u!1001 &6262861840132181256

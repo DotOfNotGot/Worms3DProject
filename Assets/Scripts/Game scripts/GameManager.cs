@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     private TurnTimer _turnTimer;
 
     [SerializeField]
+    private CameraHandler sceneCamera;
+
+    [SerializeField]
     private MatchInfo _matchInfo;
 
     [SerializeField]
@@ -45,19 +48,8 @@ public class GameManager : MonoBehaviour
     {
         if (_currentInputManager.SwitchUnitAction.triggered)
         {
-            if (currentUnitIndex + 1 != _units[CurrentTurnIndex].Count)
-            {
-                currentUnitIndex += 1;
-            }
-            else
-            {
-                currentUnitIndex = 0;
-            }
-
-            GetCurrentInputManager();
-            SetNonActiveUnitsKinematic(CurrentTurnIndex);
+            HandleUnitChange();
         }
-        SetNonActiveUnitsInput();
     }
 
     private void FixedUpdate()
@@ -72,41 +64,67 @@ public class GameManager : MonoBehaviour
             {
                 currentTurnIndex = 0;
             }
-
             currentUnitIndex = 0;
-            _turnTimer.ResetTurnTimer();
-            DisableUnitsGUI();
+            HandleTurnChange();
         }
         SetNonActiveTeamsKinematic();
     }
+    
+    private void HandleTurnChange()
+    {
+        _currentInputManager = GetCurrentInputManager();
+        sceneCamera.SetCameraInputManager(_currentInputManager);
+        sceneCamera.SetCameraTarget(_units[currentTurnIndex][currentUnitIndex].transform);
+        SetUnitsInput();
+        SetUnitsWeapons();
+        DisableUnitsGUI();
+        _turnTimer.ResetTurnTimer();
+    }
 
-    private void SetNonActiveUnitsInput()
+    private void HandleUnitChange()
+    {
+        if (currentUnitIndex + 1 != _units[CurrentTurnIndex].Count)
+        {
+            currentUnitIndex += 1;
+        }
+        else
+        {
+            currentUnitIndex = 0;
+        }
+
+        _currentInputManager = GetCurrentInputManager();
+        sceneCamera.SetCameraInputManager(_currentInputManager);
+        sceneCamera.SetCameraTarget(_units[currentTurnIndex][currentUnitIndex].transform);
+        SetUnitsInput();
+        SetNonActiveUnitsKinematic(CurrentTurnIndex);
+    }
+    private void SetUnitsWeapons()
     {
         for (int j = 0; j < teams.Count; j++)
         {
             for (int i = 0; i < _units[j].Count; i++)
             {
-                if (_units[j][i].GetComponent<PlayerInputManager>() != _currentInputManager)
-                {
-                    _units[j][i].GetComponent<PlayerInputManager>().ToggleInputOn(false);
-                }
-            }
-        }
-        
-        for (int j = 0; j < teams.Count; j++)
-        {
-            for (int i = 0; i < _units[j].Count; i++)
-            {
+                WeaponSelector unitWeaponSelector = _units[j][i].GetComponentInChildren<WeaponSelector>();
+                _units[j][i].GetComponentInChildren<PlayerController>().SetCurrentWeapon(unitWeaponSelector.GetCurrentWeapon());
+
                 if (j != currentTurnIndex || i != currentUnitIndex)
                 {
-                    _units[j][i].GetComponentInChildren<WeaponSelector>().TurnWeaponsOff();
-                }
-                else
-                {
-                    _units[j][i].GetComponentInChildren<PlayerController>().HandleWeapon();
+                    unitWeaponSelector.TurnWeaponsOff();
                 }
             }
         }
+    }
+
+    private void SetUnitsInput()
+    {
+        for (int j = 0; j < teams.Count; j++)
+        {
+            foreach (var unit in _units[j])
+            {
+                unit.GetComponent<UnitsInputSetter>().DisableUnitInput(unit.GetComponent<PlayerInputManager>());
+            }
+        }
+        _units[currentTurnIndex][currentUnitIndex].GetComponent<UnitsInputSetter>().EnableUnitInput(GetCurrentInputManager());
     }
 
     private void DisableUnitsGUI()
@@ -152,41 +170,21 @@ public class GameManager : MonoBehaviour
 
     public PlayerInputManager GetCurrentInputManager()
     {
-        _currentInputManager = _units[currentTurnIndex][currentUnitIndex].GetComponent<PlayerInputManager>();
-        return _currentInputManager;
+        return _currentInputManager = _units[currentTurnIndex][currentUnitIndex].GetComponent<PlayerInputManager>();
     }
 
     private void PrepareMatch()
     {
         _matchInfo = MatchInfo.Instance;
+        // Sets info of match, instantiates the correct number of teams and units per team.
         if (_matchInfo != null)
         {
-            _turnTimer.SetStoredTimerDuration(_matchInfo.TurnTimerLength);
-
-            for (int i = 0; i < _matchInfo.AmountOfPlayers; i++)
-            {
-                var currentTeam = Instantiate(teamPrefab, transform.GetChild(0));
-                for (int j = 0; j < _matchInfo.AmountOfUnits; j++)
-                {
-                    var currentUnit = Instantiate(playerPrefab, currentTeam.transform);
-                    currentUnit.transform.localPosition += new Vector3(j * 3f, 0, i * 3f);
-                }
-            }
+            SetInfo(_matchInfo.TurnTimerLength, _matchInfo.AmountOfPlayers, _matchInfo.AmountOfUnits);
         }
         else
         {
-            for (int i = 0; i < 4; i++)
-            {
-                var currentTeam = Instantiate(teamPrefab, transform.GetChild(0));
-                for (int j = 0; j < 2; j++)
-                {
-                    var currentUnit = Instantiate(playerPrefab, currentTeam.transform);
-                    currentUnit.transform.localPosition += new Vector3(j * 3f, 0, i * 3f);
-                }
-            }
+            SetInfo(_turnTimer.DurationInSeconds, 4, 2);
         }
-
-        _turnTimer.ResetTurnTimer();
 
         teams = new List<GameObject>();
         _units = new List<List<GameObject>>();
@@ -210,8 +208,7 @@ public class GameManager : MonoBehaviour
             // Sets each units team index and unit index.
             for (int i = 0; i < _units[j].Count; i++)
             {
-                var currentUnitInformation = _units[j][i].GetComponent<UnitInformation>();
-                currentUnitInformation.SetIndexes(j, i);
+                _units[j][i].GetComponent<UnitInformation>().SetIndexes(j, i);
             }
 
             // Gets all units from nested list so that they can be shown in editor. Will be removed later as it has no other purpose.
@@ -221,6 +218,20 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        HandleTurnChange();
     }
+    private void SetInfo(float turnTimerLength, int amountOfPlayers, int amountOfUnits)
+    {
+        _turnTimer.SetStoredTimerDuration(turnTimerLength);
 
+        for (int j = 0; j < amountOfPlayers; j++)
+        {
+            var currentTeam = Instantiate(teamPrefab, transform.GetChild(0));
+            for (int i = 0; i < amountOfUnits; i++)
+            {
+                var currentUnit = Instantiate(playerPrefab, currentTeam.transform);
+                currentUnit.transform.localPosition += new Vector3(i * 3f, 0, j * 3f);
+            }
+        }
+    }
 }

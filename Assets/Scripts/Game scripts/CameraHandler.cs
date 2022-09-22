@@ -9,10 +9,7 @@ public class CameraHandler : MonoBehaviour
     private PlayerInputManager currentInputManager;
 
     [SerializeField]
-    private GameManager gameManager;
-
-    [SerializeField]
-    private Transform focus;
+    private Transform target;
 
     [SerializeField, Range(0f, 20f)]
     private float distance = 5f;
@@ -57,11 +54,10 @@ public class CameraHandler : MonoBehaviour
 
     private void Update()
     {
-        if (gameManager != null)
+        if (currentInputManager != null)
         {
-            currentInputManager = gameManager.GetCurrentInputManager();
+            _rotationInput = new Vector2(currentInputManager.RawCameraRotateInput.y, currentInputManager.RawCameraRotateInput.x);
         }
-        _rotationInput = new Vector2(currentInputManager.RawCameraRotateInput.y, currentInputManager.RawCameraRotateInput.x);
     }
 
     // Update is called once per frame
@@ -83,7 +79,7 @@ public class CameraHandler : MonoBehaviour
 
         Vector3 rectOffset = lookDirection * thisCamera.nearClipPlane;
         Vector3 rectPosition = lookPosition + rectOffset;
-        Vector3 castFrom = focus.position;
+        Vector3 castFrom = target.position;
         Vector3 castLine = rectPosition - castFrom;
         float castDistance = castLine.magnitude;
         Vector3 castDirection = castLine / castDistance;
@@ -95,6 +91,16 @@ public class CameraHandler : MonoBehaviour
         }
 
         transform.SetPositionAndRotation(lookPosition, lookRotation);
+    }
+
+    public void SetCameraTarget(Transform newTarget)
+    {
+        target = newTarget;
+    }
+
+    public void SetCameraInputManager(PlayerInputManager newInputManager)
+    {
+        currentInputManager = newInputManager;
     }
 
     private bool ManualRotation()
@@ -136,11 +142,7 @@ public class CameraHandler : MonoBehaviour
 
     private void UpdateFocusPoint()
     {
-        if (gameManager != null)
-        {
-            focus = gameManager.GetCameraFollowTarget();
-        }
-        Vector3 targetPoint = focus.position;
+        Vector3 targetPoint = target.position;
         if (focusRadius > 0f)
         {
             float distance = Vector3.Distance(targetPoint, _focusPoint);

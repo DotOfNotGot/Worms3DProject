@@ -529,10 +529,11 @@ GameObject:
   - component: {fileID: 2202277161444971645}
   - component: {fileID: 2202277161444971646}
   - component: {fileID: 2202277161444971647}
-  - component: {fileID: 2202277161444971905}
-  - component: {fileID: 265789582038012776}
   - component: {fileID: 2202277161444971906}
   - component: {fileID: 5885462680847313156}
+  - component: {fileID: 2202277161444971905}
+  - component: {fileID: 265789582038012776}
+  - component: {fileID: 4426729410103390728}
   - component: {fileID: 2202277161444971904}
   m_Layer: 3
   m_Name: Player
@@ -623,6 +624,36 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &2202277161444971906
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2202277161444971640}
+  serializedVersion: 2
+  m_Mass: 20
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 112
+  m_CollisionDetection: 1
+--- !u!114 &5885462680847313156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2202277161444971640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f2f35ed97082d44a8ede3d39ba8b0b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teamIndex: 0
+  unitIndex: 0
 --- !u!114 &2202277161444971905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -669,23 +700,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rawMoveInput: {x: 0, y: 0}
   rawCameraRotateInput: {x: 0, y: 0}
---- !u!54 &2202277161444971906
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2202277161444971640}
-  serializedVersion: 2
-  m_Mass: 20
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 112
-  m_CollisionDetection: 1
---- !u!114 &5885462680847313156
+--- !u!114 &4426729410103390728
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -694,11 +709,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2202277161444971640}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f2f35ed97082d44a8ede3d39ba8b0b2, type: 3}
+  m_Script: {fileID: 11500000, guid: 1ce1e09bac7db814d9463cfec041edbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teamIndex: 0
-  unitIndex: 0
 --- !u!114 &2202277161444971904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -757,14 +770,6 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: dac07e50-ed37-43b8-860a-9daf310ad6bf
     m_ActionName: Player Movement/Rotate Camera[/Mouse/delta]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 6498cbed-0ed9-4dbf-9d2c-551345edc711
-    m_ActionName: Menu controls/Navigate Menu[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: cccafe33-901c-45bb-9a12-680fabc8b62c
-    m_ActionName: Menu controls/Select[/Keyboard/space]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: dd7fdae4-73a4-4a8d-a67e-0bf928b99667
@@ -905,8 +910,8 @@ MonoBehaviour:
   weaponSelectorObject: {fileID: 8193521975853514440}
   weapons:
   - {fileID: 0}
-  - {fileID: 6397787924836976123, guid: e4f2d6fb81144f043b9c22768bb9a80e, type: 3}
-  - {fileID: 627194492258851859, guid: ba86fe53a4c10af45b0bc813dc18aa7b, type: 3}
+  - {fileID: 8972800613951039002, guid: e4f2d6fb81144f043b9c22768bb9a80e, type: 3}
+  - {fileID: 575941454139437228, guid: ba86fe53a4c10af45b0bc813dc18aa7b, type: 3}
   weaponGOs: []
 --- !u!1 &2665037727259441540
 GameObject:
