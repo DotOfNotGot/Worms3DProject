@@ -46,6 +46,11 @@ public class TurnTimer : MonoBehaviour
         durationInSeconds = _storedStartDuration;
     }
 
+    public void SetTurnTimer(float newTime)
+    {
+        durationInSeconds = newTime;
+    }
+
     public void SetStoredTimerDuration(float timerStartDuration)
     {
         _storedStartDuration = timerStartDuration;

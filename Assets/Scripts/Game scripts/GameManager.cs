@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     [SerializeField, Range(0, 3)]
     private int currentTurnIndex = 0, currentUnitIndex = 0;
 
+    private bool _shouldAddToIndex = true;
 
     public int CurrentTurnIndex { get => currentTurnIndex; }
     public List<List<GameObject>> Units { get => _units; }
@@ -46,39 +47,76 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_currentInputManager.SwitchUnitAction.triggered)
-        {
-            HandleUnitChange();
-        }
     }
 
     private void FixedUpdate()
     {
         if (_turnTimer.DurationInSeconds <= 0f)
         {
-            if (currentTurnIndex + 1 != teams.Count)
+            if (_shouldAddToIndex)
             {
-                currentTurnIndex += 1;
+                if (currentTurnIndex + 1 != teams.Count)
+                {
+                    currentTurnIndex += 1;
+                }
+                else
+                {
+                    currentTurnIndex = 0;
+                    if (currentUnitIndex + 1 != Units[currentTurnIndex].Count)
+                    {
+                        currentUnitIndex += 1;
+                    }
+                    else
+                    {
+                        currentUnitIndex = 0;
+                    }
+                }
+                _shouldAddToIndex = false;
+                sceneCamera.SetReadyForRoundFalse();
             }
-            else
-            {
-                currentTurnIndex = 0;
-            }
-            currentUnitIndex = 0;
+
             HandleTurnChange();
+
         }
         SetNonActiveTeamsKinematic();
     }
-    
+
+    private void CheckForDeadUnits()
+    {
+        for (int i = 0; i < teams.Count; i++)
+        {
+            var unitsToDestroy = new List<GameObject>();
+            foreach (var unit in _units[i])
+            {
+                if (unit.GetComponent<UnitInformation>().HP <= 0)
+                {
+                    unitsToDestroy.Add(unit);
+                }
+            }
+            while (unitsToDestroy.Count != 0)
+            {
+                _units[i].Remove(unitsToDestroy[0]);
+                unitsToDestroy[0].SetActive(false);
+                unitsToDestroy.Remove(unitsToDestroy[0]);
+            }
+        }
+    }
+
     private void HandleTurnChange()
     {
+        CheckForDeadUnits();
         _currentInputManager = GetCurrentInputManager();
-        sceneCamera.SetCameraInputManager(_currentInputManager);
-        sceneCamera.SetCameraTarget(_units[currentTurnIndex][currentUnitIndex].transform);
         SetUnitsInput();
         SetUnitsWeapons();
         DisableUnitsGUI();
-        _turnTimer.ResetTurnTimer();
+        sceneCamera.SetCameraTarget(_units[currentTurnIndex][currentUnitIndex].transform);
+        sceneCamera.SetCameraInputManager(_currentInputManager);
+        if (sceneCamera.ReadyForRound)
+        {
+            _turnTimer.ResetTurnTimer();
+            _shouldAddToIndex = true;
+            sceneCamera.SetReadyForRoundFalse();
+        }
     }
 
     private void HandleUnitChange()
@@ -107,10 +145,7 @@ public class GameManager : MonoBehaviour
                 WeaponSelector unitWeaponSelector = _units[j][i].GetComponentInChildren<WeaponSelector>();
                 _units[j][i].GetComponentInChildren<PlayerController>().SetCurrentWeapon(unitWeaponSelector.GetCurrentWeapon());
 
-                if (j != currentTurnIndex || i != currentUnitIndex)
-                {
-                    unitWeaponSelector.TurnWeaponsOff();
-                }
+                unitWeaponSelector.TurnWeaponsOff();
             }
         }
     }
@@ -124,7 +159,10 @@ public class GameManager : MonoBehaviour
                 unit.GetComponent<UnitsInputSetter>().DisableUnitInput(unit.GetComponent<PlayerInputManager>());
             }
         }
-        _units[currentTurnIndex][currentUnitIndex].GetComponent<UnitsInputSetter>().EnableUnitInput(GetCurrentInputManager());
+        if (sceneCamera.ReadyForRound)
+        {
+            _units[currentTurnIndex][currentUnitIndex].GetComponent<UnitsInputSetter>().EnableUnitInput(GetCurrentInputManager());
+        }
     }
 
     private void DisableUnitsGUI()

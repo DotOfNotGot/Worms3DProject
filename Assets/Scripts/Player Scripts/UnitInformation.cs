@@ -11,6 +11,11 @@ public class UnitInformation : MonoBehaviour
     [SerializeField, Range(0, 3)]
     private int unitIndex;
 
+    [SerializeField]
+    private int hp = 100;
+
+    public int HP { get => hp; }
+
     private Material _unitMaterial;
 
     // Start is called before the first frame update
@@ -25,6 +30,16 @@ public class UnitInformation : MonoBehaviour
     {
         teamIndex = newTeamIndex;
         unitIndex = newUnitIndex;
+    }
+
+    public void Damage(float damageAmount)
+    {
+        hp -= (int)damageAmount;
+    }
+
+    public void Heal(int healAmount)
+    {
+        hp += healAmount;
     }
 
     // Uses team index to set the color of the unit.

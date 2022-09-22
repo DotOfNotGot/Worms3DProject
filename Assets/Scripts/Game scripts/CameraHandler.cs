@@ -10,6 +10,7 @@ public class CameraHandler : MonoBehaviour
 
     [SerializeField]
     private Transform target;
+    private Transform _oldTarget;
 
     [SerializeField, Range(0f, 20f)]
     private float distance = 5f;
@@ -42,6 +43,8 @@ public class CameraHandler : MonoBehaviour
     [SerializeField]
     private Camera thisCamera;
 
+    private bool _readyForRound = true;
+    public bool ReadyForRound { get => _readyForRound; }
 
     private RaycastHit _hit;
 
@@ -63,7 +66,26 @@ public class CameraHandler : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        UpdateFocusPoint();
+        // TODO: Fix lerp+freeze between turns. Have it not at game start.
+
+
+        if (ReadyForRound)
+        {
+            UpdateFocusPoint();
+        }
+
+        if (Vector3.Distance(_focusPoint, target.position) > 1 && currentInputManager != enabled)
+        {
+            _readyForRound = false;
+            _focusPoint = Vector3.Lerp(_focusPoint, target.position, 5f * Time.deltaTime);
+        }
+        else
+        {
+            StartCoroutine(SetReadyForRoundTrue());
+        }
+
+        
+
         Quaternion lookRotation;
         if (ManualRotation() || AutomaticRotation())
         {
@@ -72,7 +94,14 @@ public class CameraHandler : MonoBehaviour
         }
         else
         {
-            lookRotation = transform.localRotation;
+            if (ReadyForRound)
+            {
+                lookRotation = transform.localRotation;
+            }
+            else
+            {
+                lookRotation = target.rotation;
+            }
         }
         Vector3 lookDirection = lookRotation * Vector3.forward;
         Vector3 lookPosition = _focusPoint - lookDirection * distance;
@@ -95,6 +124,10 @@ public class CameraHandler : MonoBehaviour
 
     public void SetCameraTarget(Transform newTarget)
     {
+        if (target != null && target != newTarget)
+        {
+            _oldTarget = target;
+        }
         target = newTarget;
     }
 
@@ -158,11 +191,25 @@ public class CameraHandler : MonoBehaviour
             }
 
             _focusPoint = Vector3.Lerp(targetPoint, _focusPoint, t);
+
+
         }
         else
         {
+
             _focusPoint = targetPoint;
         }
+    }
+
+    private IEnumerator SetReadyForRoundTrue()
+    {
+        yield return new WaitForSeconds(3f);
+        _readyForRound = true;
+    }
+
+    public void SetReadyForRoundFalse()
+    {
+        _readyForRound = false;
     }
 
     private Vector3 CameraHalfExtends

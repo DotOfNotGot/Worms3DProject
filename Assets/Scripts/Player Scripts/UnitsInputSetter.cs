@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class UnitsInputSetter : MonoBehaviour
 {
-
-
     public void EnableUnitInput(PlayerInputManager passedInputManager)
     {
         passedInputManager.enabled = true;
@@ -15,6 +13,7 @@ public class UnitsInputSetter : MonoBehaviour
     public void DisableUnitInput(PlayerInputManager passedInputManager)
     {
         passedInputManager.ToggleInputOn(false);
+        passedInputManager.SetAllInputZero();
         passedInputManager.enabled = false;
     }
 }
