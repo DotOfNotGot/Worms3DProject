@@ -84,8 +84,6 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
 
-        HandleWeapon();
-
         _moveDirection = new Vector3(_inputManager.RawMoveInput.x, 0, _inputManager.RawMoveInput.y);
         _moveDirection = _cameraMainTransform.forward * _moveDirection.z + _cameraMainTransform.right * _moveDirection.x;
         _moveDirection.y = 0f;
@@ -144,7 +142,7 @@ public class PlayerController : MonoBehaviour
         framesGrounded = 0;
     }
 
-    private void HandleWeapon()
+    public void HandleWeapon()
     {
         //if (weaponAttachPoint.GetChild(0).transform.localPosition != Vector3.zero)
         //{
@@ -152,6 +150,7 @@ public class PlayerController : MonoBehaviour
         //}
 
         currentWeapon = playerWeaponSelector.GetCurrentWeapon();
+        
         playerWeaponSelector.SetInputManager(_inputManager);
 
         if (currentWeapon == null) return;

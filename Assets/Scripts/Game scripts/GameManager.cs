@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
             }
             SetNonActiveUnitsKinematic(CurrentTurnIndex);
         }
+        SetNonActiveUnitsInput();
     }
 
     private void FixedUpdate()
@@ -75,7 +76,24 @@ public class GameManager : MonoBehaviour
             DisableUnitsGUI();
         }
         SetNonActiveTeamsKinematic();
+    }
 
+    private void SetNonActiveUnitsInput()
+    {
+        for (int j = 0; j < teams.Count; j++)
+        {
+            for (int i = 0; i < _units[j].Count; i++)
+            {
+                if (j != currentTurnIndex || i != currentUnitIndex)
+                {
+                    _units[j][i].GetComponentInChildren<WeaponSelector>().TurnWeaponsOff();
+                }
+                else
+                {
+                    _units[j][i].GetComponentInChildren<PlayerController>().HandleWeapon();
+                }
+            }
+        }
     }
 
     private void DisableUnitsGUI()

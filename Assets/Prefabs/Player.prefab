@@ -904,6 +904,7 @@ MonoBehaviour:
   weaponsUIList: {fileID: 936750702787235813}
   weaponSelectorObject: {fileID: 8193521975853514440}
   weapons:
+  - {fileID: 0}
   - {fileID: 6397787924836976123, guid: e4f2d6fb81144f043b9c22768bb9a80e, type: 3}
   - {fileID: 627194492258851859, guid: ba86fe53a4c10af45b0bc813dc18aa7b, type: 3}
   weaponGOs: []
@@ -1215,6 +1216,8 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
+    - m_Text: -None-
+      m_Image: {fileID: 0}
     - m_Text: Bazooka
       m_Image: {fileID: 0}
     - m_Text: Grenade
