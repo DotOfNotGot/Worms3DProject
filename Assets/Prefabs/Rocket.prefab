@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 2044128329120382935}
   - component: {fileID: 7327354425865910949}
   - component: {fileID: 3362068159703532081}
-  m_Layer: 0
+  - component: {fileID: 2186352653299279020}
+  m_Layer: 3
   m_Name: Rocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,9 +114,9 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &3362068159703532081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,4 +129,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b73390a2548345043a7f4e7f35152a81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rocketRb: {fileID: 7327354425865910949}
+  projectileRb: {fileID: 7327354425865910949}
+  explosionRadius: 5
+  explosionForce: 400
+  explosionUpwardsModifier: 1
+  maxFramesAlive: 200
+--- !u!135 &2186352653299279020
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9093934692171033021}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 19
+  m_Center: {x: 0, y: 0, z: 0}
