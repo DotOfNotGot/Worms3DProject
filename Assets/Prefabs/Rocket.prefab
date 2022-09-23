@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileRb: {fileID: 7327354425865910949}
-  projectileDamage: 100
+  projectileDamage: 45
   explosionRadius: 5
   explosionForce: 400
   explosionUpwardsModifier: 1
