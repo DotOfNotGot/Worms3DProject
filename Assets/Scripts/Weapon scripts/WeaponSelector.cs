@@ -90,6 +90,14 @@ public class WeaponSelector : MonoBehaviour
         weaponSelectorObject.SetActive(false);
     }
 
+    public void SetCurrentWeaponByIndex(int newWeaponIndex)
+    {
+        if (weaponGOs.Count != 0)
+        {
+            _currentWeapon = weaponGOs[0].GetComponent<Weapon>();
+        }
+    }
+    
     public Weapon GetCurrentWeapon()
     {
         return _currentWeapon;
