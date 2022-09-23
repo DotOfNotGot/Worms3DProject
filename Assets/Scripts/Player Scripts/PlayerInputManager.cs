@@ -9,6 +9,8 @@ public class PlayerInputManager : MonoBehaviour
     [SerializeField] private Vector2 rawMoveInput;
     [SerializeField] private Vector2 rawCameraRotateInput;
 
+    private bool _shouldUpdateInputValue = true;
+
     private InputAction _moveAction;
     private InputAction _rotateCameraAction;
     public InputAction JumpAction { get; private set; }
@@ -34,15 +36,26 @@ public class PlayerInputManager : MonoBehaviour
         
     }
 
+    public void SetAllInputZero()
+    {
+        rawMoveInput = Vector2.zero;
+        rawCameraRotateInput = Vector2.zero;
+    }
+
+
     // Update is called once per frame
     void Update()
     {
-        rawMoveInput = _moveAction.ReadValue<Vector2>();
-        rawCameraRotateInput = _rotateCameraAction.ReadValue<Vector2>();
+        if (_shouldUpdateInputValue)
+        {
+            rawMoveInput = _moveAction.ReadValue<Vector2>();
+            rawCameraRotateInput = _rotateCameraAction.ReadValue<Vector2>();
+        }
     }
 
     public void ToggleInputOn(bool desiredState)
     {
+        _shouldUpdateInputValue = desiredState;
         _playerInput.enabled = desiredState;
     }
 

@@ -32,8 +32,12 @@ public class TurnTimer : MonoBehaviour
         if (durationInSeconds > 0)
         {
             durationInSeconds -= Time.deltaTime;
-            UpdateTimerDisplay();
         }
+        else
+        {
+            durationInSeconds = 0;
+        }
+        UpdateTimerDisplay();
     }
 
     private void UpdateTimerDisplay()
@@ -44,6 +48,11 @@ public class TurnTimer : MonoBehaviour
     public void ResetTurnTimer()
     {
         durationInSeconds = _storedStartDuration;
+    }
+
+    public void SetTurnTimer(float newTime)
+    {
+        durationInSeconds = newTime;
     }
 
     public void SetStoredTimerDuration(float timerStartDuration)

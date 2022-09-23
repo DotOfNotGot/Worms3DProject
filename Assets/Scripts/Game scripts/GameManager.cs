@@ -3,100 +3,190 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Json;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR.Haptics;
 
 public class GameManager : MonoBehaviour
 {
-
     private PlayerInputManager _currentInputManager;
     private TurnTimer _turnTimer;
 
-    [SerializeField]
-    private CameraHandler sceneCamera;
+    private enum GameStates
+    {
+        TurnStart,
+        CurrentlyInTurn,
+        TurnEnd,
+        BetweenTurns
+    }
 
     [SerializeField]
+    private GameStates currentState = GameStates.TurnStart;
+
+    [SerializeField] private CameraHandler sceneCamera;
+
     private MatchInfo _matchInfo;
 
-    [SerializeField]
-    private GameObject teamPrefab;
-    [SerializeField]
-    private GameObject playerPrefab;
+    [SerializeField] private GameObject teamPrefab;
+    [SerializeField] private GameObject playerPrefab;
 
-    [SerializeField]
-    private List<GameObject> teams;
+    [SerializeField] private List<GameObject> teams;
+
+    
+
+    [SerializeField] private List<GameObject> deadUnits;
 
     private List<List<GameObject>> _units;
 
-    [SerializeField]
-    private List<GameObject> serializedUnitsList;
+    [SerializeField] private List<GameObject> serializedUnitsList;
 
-    [SerializeField, Range(0, 3)]
-    private int currentTurnIndex = 0, currentUnitIndex = 0;
+    [SerializeField, Range(0, 3)] private int currentTurnIndex = 0, currentUnitIndex = 0;
 
+    private bool _turnTimerReachedZeroThisFrame = true;
+
+    private bool _deadUnitTargetInProgress = false;
+
+    private bool _shouldSwitchState = true;
 
     public int CurrentTurnIndex { get => currentTurnIndex; }
+
     public List<List<GameObject>> Units { get => _units; }
 
 
     private void Start()
     {
         _turnTimer = GetComponent<TurnTimer>();
+        deadUnits = new List<GameObject>();
         PrepareMatch();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (_currentInputManager.SwitchUnitAction.triggered)
-        {
-            HandleUnitChange();
-        }
     }
 
     private void FixedUpdate()
     {
-        if (_turnTimer.DurationInSeconds <= 0f)
+        
+
+        switch (currentState)
         {
-            if (currentTurnIndex + 1 != teams.Count)
-            {
-                currentTurnIndex += 1;
-            }
-            else
-            {
-                currentTurnIndex = 0;
-            }
-            currentUnitIndex = 0;
-            HandleTurnChange();
+            case GameStates.TurnStart:
+
+                HandleTurnStart();
+
+                currentState = GameStates.CurrentlyInTurn;
+
+                break;
+            case GameStates.CurrentlyInTurn:
+
+                if (_turnTimer.DurationInSeconds <= 0f)
+                {
+                        currentState = GameStates.TurnEnd;
+                        _turnTimerReachedZeroThisFrame = false;
+                }
+
+                break;
+            case GameStates.TurnEnd:
+                if (currentTurnIndex + 1 != teams.Count)
+                {
+                    currentTurnIndex += 1;
+                }
+                else
+                {
+                    currentTurnIndex = 0;
+                    if (currentUnitIndex + 1 != Units[currentTurnIndex].Count)
+                    {
+                        currentUnitIndex += 1;
+                    }
+                    else
+                    {
+                        currentUnitIndex = 0;
+                    }
+                }
+
+                HandleTurnEnd();
+
+                currentState = GameStates.BetweenTurns;
+                break;
+            case GameStates.BetweenTurns:
+
+                HandleBetweenTurns();
+                if (_shouldSwitchState)
+                {
+                    currentState = GameStates.TurnStart;
+                }
+                break;
         }
+
         SetNonActiveTeamsKinematic();
     }
-    
-    private void HandleTurnChange()
+
+
+    private void HandleTurnStart()
     {
+        _turnTimerReachedZeroThisFrame = true;
         _currentInputManager = GetCurrentInputManager();
-        sceneCamera.SetCameraInputManager(_currentInputManager);
         sceneCamera.SetCameraTarget(_units[currentTurnIndex][currentUnitIndex].transform);
+        sceneCamera.SetCameraInputManager(_currentInputManager);
+    }
+    private void HandleTurnEnd()
+    {
+        CheckForDeadUnits();
         SetUnitsInput();
         SetUnitsWeapons();
         DisableUnitsGUI();
-        _turnTimer.ResetTurnTimer();
     }
 
-    private void HandleUnitChange()
+    private void HandleBetweenTurns()
     {
-        if (currentUnitIndex + 1 != _units[CurrentTurnIndex].Count)
+        _shouldSwitchState = HandleDeadUnits();
+        if (_shouldSwitchState)
         {
-            currentUnitIndex += 1;
+            _turnTimer.ResetTurnTimer();
+        }
+    }
+
+    private void CheckForDeadUnits()
+    {
+        for (int i = 0; i < teams.Count; i++)
+        {
+            foreach (var unit in _units[i])
+            {
+                if (unit.GetComponent<UnitInformation>().HP <= 0)
+                {
+                    deadUnits.Add(unit);
+
+                }
+            }
+
+            foreach (var unit in deadUnits)
+            {
+                _units[i].Remove(unit);
+            }
+        }
+    }
+
+    private bool HandleDeadUnits()
+    {
+
+        if (deadUnits.Count == 0)
+        {
+            return true;
         }
         else
         {
-            currentUnitIndex = 0;
+            if (!_deadUnitTargetInProgress)
+            {
+                StartCoroutine(HandleDeadUnitsTarget());
+            }
+            return false;
         }
+        
+    }
 
-        _currentInputManager = GetCurrentInputManager();
-        sceneCamera.SetCameraInputManager(_currentInputManager);
-        sceneCamera.SetCameraTarget(_units[currentTurnIndex][currentUnitIndex].transform);
-        SetUnitsInput();
-        SetNonActiveUnitsKinematic(CurrentTurnIndex);
+    private IEnumerator HandleDeadUnitsTarget()
+    {
+        _deadUnitTargetInProgress = true;
+        sceneCamera.SetCameraTarget(deadUnits[0].transform);
+        yield return new WaitForSecondsRealtime(5f);
+        deadUnits[0].SetActive(false);
+        deadUnits.Remove(deadUnits[0]);
+        _deadUnitTargetInProgress = false;
+
     }
     private void SetUnitsWeapons()
     {
@@ -105,12 +195,11 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < _units[j].Count; i++)
             {
                 WeaponSelector unitWeaponSelector = _units[j][i].GetComponentInChildren<WeaponSelector>();
-                _units[j][i].GetComponentInChildren<PlayerController>().SetCurrentWeapon(unitWeaponSelector.GetCurrentWeapon());
+                unitWeaponSelector.SetCurrentWeaponByIndex(0);
+                _units[j][i].GetComponentInChildren<PlayerController>()
+                    .SetCurrentWeapon(unitWeaponSelector.GetCurrentWeapon());
 
-                if (j != currentTurnIndex || i != currentUnitIndex)
-                {
-                    unitWeaponSelector.TurnWeaponsOff();
-                }
+                unitWeaponSelector.TurnWeaponsOff();
             }
         }
     }
@@ -124,6 +213,7 @@ public class GameManager : MonoBehaviour
                 unit.GetComponent<UnitsInputSetter>().DisableUnitInput(unit.GetComponent<PlayerInputManager>());
             }
         }
+
         _units[currentTurnIndex][currentUnitIndex].GetComponent<UnitsInputSetter>().EnableUnitInput(GetCurrentInputManager());
     }
 
@@ -218,8 +308,12 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        HandleTurnChange();
+        HandleTurnStart();
+        HandleTurnEnd();
+        HandleBetweenTurns();
+
     }
+
     private void SetInfo(float turnTimerLength, int amountOfPlayers, int amountOfUnits)
     {
         _turnTimer.SetStoredTimerDuration(turnTimerLength);

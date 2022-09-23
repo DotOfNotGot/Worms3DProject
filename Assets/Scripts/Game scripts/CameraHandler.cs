@@ -5,32 +5,29 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class CameraHandler : MonoBehaviour
 {
-    [SerializeField]
-    private PlayerInputManager currentInputManager;
+    [SerializeField] private PlayerInputManager currentInputManager;
 
-    [SerializeField]
-    private Transform target;
+    private enum _cameraStates
+    {
+    }
 
-    [SerializeField, Range(0f, 20f)]
-    private float distance = 5f;
 
-    [SerializeField, Min(0f)]
-    private float focusRadius = 1f;
+    [SerializeField] private Transform target;
+    private Transform _oldTarget;
 
-    [SerializeField, Range(0f, 1f)]
-    float focusCentering = 0.5f;
+    [SerializeField, Range(0f, 20f)] private float distance = 5f;
 
-    [SerializeField, Min(0f)]
-    private float allignDelay = 5f;
+    [SerializeField, Min(0f)] private float focusRadius = 1f;
 
-    [SerializeField, Range(1f, 360f)]
-    private float rotationSpeed = 90f;
+    [SerializeField, Range(0f, 1f)] float focusCentering = 0.5f;
 
-    [SerializeField, Range(-89, 89f)]
-    private float minVerticalAngle = -30f, maxVerticalAngle = 60f;
+    [SerializeField, Min(0f)] private float allignDelay = 5f;
 
-    [SerializeField]
-    private LayerMask obstructionMask = -1;
+    [SerializeField, Range(1f, 360f)] private float rotationSpeed = 90f;
+
+    [SerializeField, Range(-89, 89f)] private float minVerticalAngle = -30f, maxVerticalAngle = 60f;
+
+    [SerializeField] private LayerMask obstructionMask = -1;
 
     private Vector3 _focusPoint;
     Vector2 _orbitAngles = new Vector2(45f, 0f);
@@ -39,9 +36,14 @@ public class CameraHandler : MonoBehaviour
 
     private float _lastManualRotationTime;
 
-    [SerializeField]
-    private Camera thisCamera;
+    [SerializeField] private Camera thisCamera;
 
+    private bool _readyForRound = true;
+
+    public bool ReadyForRound
+    {
+        get => _readyForRound;
+    }
 
     private RaycastHit _hit;
 
@@ -63,7 +65,22 @@ public class CameraHandler : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
+        // TODO: Fix lerp+freeze between turns. Have it not at game start.
+
+
         UpdateFocusPoint();
+
+        // if (Vector3.Distance(_focusPoint, target.position) > 1 && currentInputManager != enabled)
+        // {
+        //     _readyForRound = false;
+        //     _focusPoint = Vector3.Lerp(_focusPoint, target.position, 5f * Time.deltaTime);
+        // }
+        // else
+        // {
+        //     StartCoroutine(SetReadyForRoundTrue());
+        // }
+
+
         Quaternion lookRotation;
         if (ManualRotation() || AutomaticRotation())
         {
@@ -72,8 +89,9 @@ public class CameraHandler : MonoBehaviour
         }
         else
         {
-            lookRotation = transform.localRotation;
+            lookRotation = target.rotation;
         }
+
         Vector3 lookDirection = lookRotation * Vector3.forward;
         Vector3 lookPosition = _focusPoint - lookDirection * distance;
 
@@ -83,7 +101,8 @@ public class CameraHandler : MonoBehaviour
         Vector3 castLine = rectPosition - castFrom;
         float castDistance = castLine.magnitude;
         Vector3 castDirection = castLine / castDistance;
-        if (Physics.BoxCast(castFrom, CameraHalfExtends, castDirection, out RaycastHit hit, lookRotation, castDistance, obstructionMask))
+        if (Physics.BoxCast(castFrom, CameraHalfExtends, castDirection, out RaycastHit hit, lookRotation, castDistance,
+                obstructionMask))
         {
             _hit = hit;
             rectPosition = castFrom + castDirection * hit.distance;
@@ -95,11 +114,17 @@ public class CameraHandler : MonoBehaviour
 
     public void SetCameraTarget(Transform newTarget)
     {
+        if (target != null && target != newTarget)
+        {
+            _oldTarget = target;
+        }
+
         target = newTarget;
     }
 
     public void SetCameraInputManager(PlayerInputManager newInputManager)
     {
+        Debug.Log(newInputManager,newInputManager);
         currentInputManager = newInputManager;
     }
 
@@ -112,6 +137,7 @@ public class CameraHandler : MonoBehaviour
             _lastManualRotationTime = Time.unscaledTime;
             return true;
         }
+
         return false;
     }
 
@@ -121,6 +147,7 @@ public class CameraHandler : MonoBehaviour
         {
             return false;
         }
+
         return true;
     }
 
@@ -137,7 +164,6 @@ public class CameraHandler : MonoBehaviour
         {
             _orbitAngles.y -= 360f;
         }
-
     }
 
     private void UpdateFocusPoint()
@@ -165,6 +191,17 @@ public class CameraHandler : MonoBehaviour
         }
     }
 
+    private IEnumerator SetReadyForRoundTrue()
+    {
+        yield return new WaitForSeconds(3f);
+        _readyForRound = true;
+    }
+
+    public void SetReadyForRoundFalse()
+    {
+        _readyForRound = false;
+    }
+
     private Vector3 CameraHalfExtends
     {
         get
@@ -176,6 +213,7 @@ public class CameraHandler : MonoBehaviour
             return halfExtends;
         }
     }
+
     private void OnValidate()
     {
         if (maxVerticalAngle < minVerticalAngle)
@@ -189,6 +227,4 @@ public class CameraHandler : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(thisCamera.transform.position, _hit.point);
     }
-
-
 }
