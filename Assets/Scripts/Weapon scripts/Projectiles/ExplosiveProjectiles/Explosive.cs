@@ -52,8 +52,6 @@ public class Explosive : Projectile
         Destroy(gameObject);
     }
 
-    
-
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {

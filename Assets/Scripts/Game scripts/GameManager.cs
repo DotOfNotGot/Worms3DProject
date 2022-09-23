@@ -124,6 +124,7 @@ public class GameManager : MonoBehaviour
     private void HandleTurnStart()
     {
         _turnTimerReachedZeroThisFrame = true;
+        EnableCurrentUnitInput();
         _currentInputManager = GetCurrentInputManager();
         sceneCamera.SetCameraTarget(_aliveUnits[currentTurnIndex][currentUnitIndex].transform);
         sceneCamera.SetCameraInputManager(_currentInputManager);
@@ -138,6 +139,7 @@ public class GameManager : MonoBehaviour
     private void HandleBetweenTurns()
     {
         _shouldSwitchState = HandleDeadUnits();
+        SetThingsForRound();
         if (!_shouldSwitchState) return;
 
         if (aliveTeams.Count <= 1)
@@ -162,12 +164,11 @@ public class GameManager : MonoBehaviour
                 currentUnitIndex = 0;
             }
         }
-        SetThingsForRound();
     }
 
     private void SetThingsForRound()
     {
-        SetUnitsInput();
+        DisableUnitsInput();
         SetUnitsWeapons();
         _turnTimer.ResetTurnTimer();
     }
@@ -208,7 +209,7 @@ public class GameManager : MonoBehaviour
     {
         _deadUnitTargetInProgress = true;
         sceneCamera.SetCameraTarget(deadUnits[0].transform);
-        yield return new WaitForSecondsRealtime(5f);
+        yield return new WaitForSecondsRealtime(2.5f);
         for (int i = 0; i < _aliveUnits.Count; i++)
         {
             _aliveUnits[i].Remove(deadUnits[0]);
@@ -221,6 +222,7 @@ public class GameManager : MonoBehaviour
         }
         
         deadUnits[0].SetActive(false);
+        yield return new WaitForSecondsRealtime(2.5f);
         deadUnits.Remove(deadUnits[0]);
         _deadUnitTargetInProgress = false;
     }
@@ -240,7 +242,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SetUnitsInput()
+    private void DisableUnitsInput()
     {
         for (int j = 0; j < aliveTeams.Count; j++)
         {
@@ -250,6 +252,10 @@ public class GameManager : MonoBehaviour
             }
         }
 
+    }
+
+    private void EnableCurrentUnitInput()
+    {
         _aliveUnits[currentTurnIndex][currentUnitIndex].GetComponent<UnitsInputSetter>().EnableUnitInput(GetCurrentInputManager());
     }
 
@@ -340,9 +346,9 @@ public class GameManager : MonoBehaviour
 
         _aliveUnits = _units;
 
+        SetThingsForRound();
         HandleTurnStart();
         HandleTurnEnd();
-        SetThingsForRound();
     }
 
     private void SetInfo(float turnTimerLength, int amountOfPlayers, int amountOfUnits)
