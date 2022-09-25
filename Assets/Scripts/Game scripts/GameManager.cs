@@ -131,8 +131,8 @@ public class GameManager : MonoBehaviour
     }
     private void HandleTurnEnd()
     {
+        SetUnitsHPDisplay();
         CheckForDeadUnits();
-
         DisableUnitsGUI();
     }
 
@@ -171,6 +171,18 @@ public class GameManager : MonoBehaviour
         DisableUnitsInput();
         SetUnitsWeapons();
         _turnTimer.ResetTurnTimer();
+    }
+
+    private void SetUnitsHPDisplay()
+    {
+        for (int i = 0; i < _aliveUnits.Count; i++)
+        {
+            foreach (var unit in _aliveUnits[i])
+            {
+                var currentUnitInfo = unit.GetComponent<UnitInformation>();
+                currentUnitInfo.TakeDamage();
+            }
+        }
     }
 
     private void CheckForDeadUnits()

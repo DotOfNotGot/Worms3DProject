@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class PlayerUIHandler : MonoBehaviour
+public class UnitUIHandler : MonoBehaviour
 {
 
     private Transform _cameraTransform;
-
     private Canvas _playerInfoCanvas;
+
     [SerializeField]
-    private TextMeshProUGUI _playerHPDisplay;
+    private TextMeshProUGUI unitHPDisplay;
 
     // Start is called before the first frame update
     void Awake()
@@ -27,7 +27,11 @@ public class PlayerUIHandler : MonoBehaviour
 
     public void SetPlayerInfoDisplay(int newHP)
     {
-        _playerHPDisplay.text = newHP.ToString();
+        if (newHP < 0)
+        {
+            newHP = 0;
+        }
+        unitHPDisplay.text = newHP.ToString();
     }
 
 }

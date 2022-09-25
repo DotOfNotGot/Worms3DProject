@@ -11,6 +11,8 @@ public class UnitInformation : MonoBehaviour
     [SerializeField, Range(0, 3)]
     private int unitIndex;
 
+    private int _storedDamage = 0;
+
     [SerializeField]
     private int hp = 100;
 
@@ -18,10 +20,14 @@ public class UnitInformation : MonoBehaviour
 
     private Material _unitMaterial;
 
+    private UnitUIHandler _uiHandler;
+
+
     // Start is called before the first frame update
     void Start()
     {
         _unitMaterial = GetComponent<Renderer>().material;
+        _uiHandler = GetComponentInChildren<UnitUIHandler>();
         SetUnitColor();
     }
 
@@ -32,10 +38,31 @@ public class UnitInformation : MonoBehaviour
         unitIndex = newUnitIndex;
     }
 
-    public void Damage(float damageAmount)
+    public void StoreDamage(float damageAmount)
     {
-        hp -= (int)damageAmount;
+        _storedDamage += (int)damageAmount;
     }
+
+    public void TakeDamage()
+    {
+        // TODO: Make the hp tick down slower ish.
+        int storedHp = hp;
+        while (hp != storedHp - _storedDamage)
+        {
+            if (_storedDamage == 0) break;
+            StartCoroutine(DamageTicker());
+        }
+        _storedDamage = 0;
+    }
+
+    private IEnumerator DamageTicker()
+    {
+        hp--;
+        _uiHandler.SetPlayerInfoDisplay(hp);
+        yield return new WaitForSecondsRealtime(1f);
+    }
+
+
 
     public void Heal(int healAmount)
     {
