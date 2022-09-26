@@ -11,16 +11,27 @@ public class UnitInformation : MonoBehaviour
     [SerializeField, Range(0, 3)]
     private int unitIndex;
 
-    private int _storedDamage = 0;
+    [SerializeField, Range(0, 100)]
+    private int storedDamage = 0;
+
+    public int StoredDamage { get => storedDamage; }
 
     [SerializeField]
     private int hp = 100;
+
+    private int _storedHP = 0;
+    public int StoredHP { get => _storedHP; }
+
 
     public int HP { get => hp; }
 
     private Material _unitMaterial;
 
     private UnitUIHandler _uiHandler;
+
+    private bool _isDead = false;
+
+    public bool IsDead { get => _isDead; }
 
 
     // Start is called before the first frame update
@@ -40,29 +51,44 @@ public class UnitInformation : MonoBehaviour
 
     public void StoreDamage(float damageAmount)
     {
-        _storedDamage += (int)damageAmount;
+        storedDamage += (int)damageAmount;
     }
 
     public void TakeDamage()
     {
         // TODO: Make the hp tick down slower ish.
-        int storedHp = hp;
-        while (hp != storedHp - _storedDamage)
+
+        if (storedDamage == 0) return;
+
+        if (_storedHP == 0)
         {
-            if (_storedDamage == 0) break;
-            StartCoroutine(DamageTicker());
+            _storedHP = hp;
         }
-        _storedDamage = 0;
+
+        if (hp > _storedHP - storedDamage && hp >= 0)
+        {
+            hp--;
+            _uiHandler.SetPlayerInfoDisplay(hp);
+        }
+        else
+        {
+            if (_storedHP - storedDamage <= 0)
+            {
+                hp = -1;
+            }
+            else
+            {
+                hp = _storedHP - storedDamage;
+            }
+            _storedHP = hp;
+            storedDamage = 0;
+        }
     }
 
-    private IEnumerator DamageTicker()
+    public void SetDead()
     {
-        hp--;
-        _uiHandler.SetPlayerInfoDisplay(hp);
-        yield return new WaitForSecondsRealtime(1f);
+        _isDead = true;
     }
-
-
 
     public void Heal(int healAmount)
     {

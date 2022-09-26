@@ -53,7 +53,7 @@ public class Chargeable : Weapon
             _launchForceModifier /= 5f;
             _shouldShoot = false;
             _chargeLaunchForce = false;
-            if (!HasShot)
+            if (!CurrentInputManager.GetComponent<PlayerController>().HasShot)
             {
                 UseWeapon(_launchForceModifier);
             }

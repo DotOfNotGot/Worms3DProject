@@ -13,10 +13,6 @@ public class Weapon : MonoBehaviour
 
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float launchForce = 50f;
-
-
-    private bool _hasShot;
-    public bool HasShot { get => _hasShot; }
     [SerializeField]
     private bool shootActionState;
     public bool ShootActionState { get => shootActionState; }
@@ -48,7 +44,7 @@ public class Weapon : MonoBehaviour
     {
         var currentProjectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
         currentProjectile.GetComponent<Explosive>().LaunchProjectile(launchForce * modifier);
-        _hasShot = true;
+        _currentInputManager.gameObject.GetComponent<PlayerController>().SetHasShot();
     }
 
     public void EnableInputManager()

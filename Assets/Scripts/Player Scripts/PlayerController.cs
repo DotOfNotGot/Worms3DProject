@@ -20,8 +20,6 @@ public class PlayerController : MonoBehaviour
 
     private Transform _cameraMainTransform;
 
-
-
     [Header("Player Attributes")]
     [SerializeField]
     private float jumpForce = 100f;
@@ -47,7 +45,6 @@ public class PlayerController : MonoBehaviour
     [Header("Player Checks")]
     [SerializeField]
     private bool isGrounded;
-    private bool _wasGroundedPreviousFrame;
     [SerializeField]
     private bool isOnSlope;
     [SerializeField]
@@ -57,10 +54,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private bool shouldAddFallSpeedMultiplier;
     [SerializeField]
+    private bool hasShot;
+    
+    [SerializeField]
     private int framesGrounded;
+    
 
     public bool IsGrounded { get => isGrounded; }
-    public bool WasGroundedPreviousFrame { get => _wasGroundedPreviousFrame; }
+    public bool HasShot { get => hasShot; }
     public int FramesGrounded { get => framesGrounded; }
 
     [Header("Debug Attributes")]
@@ -112,12 +113,10 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded)
         {
-            _wasGroundedPreviousFrame = true;
             framesGrounded++;
         }
         else
         {
-            _wasGroundedPreviousFrame = false;
             framesGrounded = 0;
         }
         GroundCheck();
@@ -163,9 +162,13 @@ public class PlayerController : MonoBehaviour
         {
             currentWeapon.gameObject.SetActive(true);
         }
-
-        
     }
+
+    public void SetHasShot()
+    {
+        hasShot = true;
+    }
+
     private void AddFallSpeedMultiplier()
     {
         playerRb.velocity += (fallMultiplier) * Physics.gravity.y * Time.deltaTime * Vector3.up;
