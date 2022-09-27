@@ -4,7 +4,6 @@ using UnityEngine;
 using TMPro;
 public class TurnTimer : MonoBehaviour
 {
-
     [SerializeField]
     private float durationInSeconds = 90f;
 

@@ -5,17 +5,26 @@ using UnityEngine;
 
 public class MatchInfo : MonoBehaviour
 {
+    
+    [Header("Match Info")]
     [SerializeField]
     private int amountOfPlayers;
     [SerializeField]
     private int amountOfUnits;
     [SerializeField]
     private float turnTimerLength;
-
     
     public int AmountOfPlayers { get => amountOfPlayers; }
     public int AmountOfUnits { get => amountOfUnits; }
     public float TurnTimerLength { get => turnTimerLength; }
+
+    [Header("Post Match Info")] 
+    [SerializeField]
+    private bool wasWin;
+    [SerializeField]
+    private List<GameObject> winningTeamUnits;
+    
+    public List<GameObject> WinningTeamUnits { get => winningTeamUnits; }
     
     public static MatchInfo Instance { get; private set; }
     
@@ -38,5 +47,20 @@ public class MatchInfo : MonoBehaviour
         amountOfUnits = unitAmount;
         turnTimerLength = turnTimer;
     }
-    
+
+    public void SetPostMatchInfo(List<List<GameObject>> teamsAndUnits, int teamIndex)
+    {
+        if (teamIndex == -1)
+        {
+            wasWin = false;
+        }
+        else
+        {
+            wasWin = true;
+            foreach (var unit in teamsAndUnits[teamIndex])
+            {
+                winningTeamUnits.Add(unit);
+            }
+        }
+    }
 }

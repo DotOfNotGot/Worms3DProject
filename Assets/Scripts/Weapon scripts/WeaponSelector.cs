@@ -37,7 +37,9 @@ public class WeaponSelector : MonoBehaviour
             }
             else
             {
-                var currentWeaponGameObject = Instantiate(new GameObject(), gameObject.transform);
+                var currentWeaponGameObject = new GameObject();
+                currentWeaponGameObject.transform.SetParent(gameObject.transform);
+                currentWeaponGameObject.transform.localPosition = Vector3.zero;
                 weaponGOs.Add(currentWeaponGameObject);
             }
         }

@@ -7,9 +7,6 @@ using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
-
-    private Canvas _menuCanvas;
-
     [SerializeField] 
     private MatchInfo matchInfo;
     
@@ -21,7 +18,6 @@ public class MainMenuManager : MonoBehaviour
 
     [SerializeField]
     private TextMeshProUGUI timerUI;
-
     
     [SerializeField] 
     private int amountOfTeams;
@@ -33,18 +29,9 @@ public class MainMenuManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _menuCanvas = GetComponent<Canvas>();
         matchInfo = MatchInfo.Instance;
         timerUI.text = turnTimerLength.ToString();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
     public void OnPlusPressed()
     {
         if (turnTimerLength + 30 < 120)
@@ -71,7 +58,6 @@ public class MainMenuManager : MonoBehaviour
 
         timerUI.text = turnTimerLength.ToString();
     }
-
     public void OnStartPressed()
     {
         amountOfTeams = teamsDropdown.value + 2;
@@ -79,5 +65,4 @@ public class MainMenuManager : MonoBehaviour
         matchInfo.SetMatchInfo(amountOfTeams, amountOfUnits, turnTimerLength);
         SceneManager.LoadScene(1);
     }
-    
 }

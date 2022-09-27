@@ -11,17 +11,35 @@ public class UnitInformation : MonoBehaviour
     [SerializeField, Range(0, 3)]
     private int unitIndex;
 
+    [SerializeField, Range(0, 100)]
+    private int storedDamage = 0;
+
     [SerializeField]
     private int hp = 100;
 
-    public int HP { get => hp; }
+    private int _storedHp = 0;
+    
+    public int TeamIndex { get => teamIndex; }    
+    public int StoredHp { get => _storedHp; }
+    public int StoredDamage { get => storedDamage; }
+
+
+    public int Hp { get => hp; }
 
     private Material _unitMaterial;
+
+    private UnitUIHandler _uiHandler;
+
+    private bool _isDead = false;
+
+    public bool IsDead { get => _isDead; }
+
 
     // Start is called before the first frame update
     void Start()
     {
         _unitMaterial = GetComponent<Renderer>().material;
+        _uiHandler = GetComponentInChildren<UnitUIHandler>();
         SetUnitColor();
     }
 
@@ -32,9 +50,45 @@ public class UnitInformation : MonoBehaviour
         unitIndex = newUnitIndex;
     }
 
-    public void Damage(float damageAmount)
+    public void StoreDamage(float damageAmount)
     {
-        hp -= (int)damageAmount;
+        storedDamage += (int)damageAmount;
+    }
+
+    public void TakeDamage()
+    {
+        // TODO: Make the hp tick down slower ish.
+
+        if (storedDamage == 0) return;
+
+        if (_storedHp == 0)
+        {
+            _storedHp = hp;
+        }
+
+        if (hp > _storedHp - storedDamage && hp >= 0)
+        {
+            hp--;
+            _uiHandler.SetPlayerInfoDisplay(hp);
+        }
+        else
+        {
+            if (_storedHp - storedDamage <= 0)
+            {
+                hp = -1;
+            }
+            else
+            {
+                hp = _storedHp - storedDamage;
+            }
+            _storedHp = hp;
+            storedDamage = 0;
+        }
+    }
+
+    public void SetDead()
+    {
+        _isDead = true;
     }
 
     public void Heal(int healAmount)

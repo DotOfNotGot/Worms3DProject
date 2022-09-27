@@ -38,7 +38,7 @@ public class Explosive : Projectile
                 if (collider.CompareTag("Player"))
                 {
                     float distanceAdjustedDamage = ProjectileDamage * (1 / (collider.transform.position - transform.position).sqrMagnitude);
-                    collider.GetComponent<UnitInformation>().Damage(distanceAdjustedDamage);
+                    collider.GetComponent<UnitInformation>().StoreDamage(distanceAdjustedDamage);
 
                     collider.attachedRigidbody.isKinematic = false;
                     collider.GetComponent<PlayerController>().ResetGroundedTimer();
@@ -51,8 +51,6 @@ public class Explosive : Projectile
         }
         Destroy(gameObject);
     }
-
-    
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
