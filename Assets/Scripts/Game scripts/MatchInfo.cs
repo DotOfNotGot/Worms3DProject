@@ -48,7 +48,7 @@ public class MatchInfo : MonoBehaviour
         turnTimerLength = turnTimer;
     }
 
-    public void SetPostMatchInfo(List<List<GameObject>> teamsAndUnits, int teamIndex)
+    public void SetPostMatchInfo(GameObject[][] teamsAndUnits, int teamIndex)
     {
         if (teamIndex == -1)
         {
