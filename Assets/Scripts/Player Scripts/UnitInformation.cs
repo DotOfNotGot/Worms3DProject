@@ -14,16 +14,17 @@ public class UnitInformation : MonoBehaviour
     [SerializeField, Range(0, 100)]
     private int storedDamage = 0;
 
-    public int StoredDamage { get => storedDamage; }
-
     [SerializeField]
     private int hp = 100;
 
-    private int _storedHP = 0;
-    public int StoredHP { get => _storedHP; }
+    private int _storedHp = 0;
+    
+    public int TeamIndex { get => teamIndex; }    
+    public int StoredHp { get => _storedHp; }
+    public int StoredDamage { get => storedDamage; }
 
 
-    public int HP { get => hp; }
+    public int Hp { get => hp; }
 
     private Material _unitMaterial;
 
@@ -60,27 +61,27 @@ public class UnitInformation : MonoBehaviour
 
         if (storedDamage == 0) return;
 
-        if (_storedHP == 0)
+        if (_storedHp == 0)
         {
-            _storedHP = hp;
+            _storedHp = hp;
         }
 
-        if (hp > _storedHP - storedDamage && hp >= 0)
+        if (hp > _storedHp - storedDamage && hp >= 0)
         {
             hp--;
             _uiHandler.SetPlayerInfoDisplay(hp);
         }
         else
         {
-            if (_storedHP - storedDamage <= 0)
+            if (_storedHp - storedDamage <= 0)
             {
                 hp = -1;
             }
             else
             {
-                hp = _storedHP - storedDamage;
+                hp = _storedHp - storedDamage;
             }
-            _storedHP = hp;
+            _storedHp = hp;
             storedDamage = 0;
         }
     }

@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
                 currentState = GameStates.CurrentlyInTurn;
 
                 break;
+            
             case GameStates.CurrentlyInTurn:
 
                 HandleCurrentlyInTurn();
@@ -85,12 +86,14 @@ public class GameManager : MonoBehaviour
                 }
 
                 break;
+            
             case GameStates.TurnEnd:
 
                 HandleTurnEnd();
                 if (_shouldSwitchState)
                     currentState = GameStates.BetweenTurns;
                 break;
+            
             case GameStates.BetweenTurns:
 
                 HandleBetweenTurns();
@@ -104,15 +107,16 @@ public class GameManager : MonoBehaviour
                     currentState = GameStates.TurnStart;
                 }
                 break;
+            
             case GameStates.GameEnd:
 
                 if (aliveTeams.Count == 1)
                 {
-                    Debug.Log(aliveTeams[0] + " won!", aliveTeams[0]);
+                    _matchInfo.SetPostMatchInfo(_units, AliveUnits[0][0].GetComponent<UnitInformation>().TeamIndex);
                 }
                 else
                 {
-                    Debug.Log("Draw");
+                    _matchInfo.SetPostMatchInfo(_units, -1);
                 }
 
                 break;
@@ -213,7 +217,7 @@ public class GameManager : MonoBehaviour
         foreach (var damagedUnit in damagedUnits)
         {
             var currentUnitInfo = damagedUnit.GetComponent<UnitInformation>();
-            if (currentUnitInfo.HP <= 0 && !currentUnitInfo.IsDead)
+            if (currentUnitInfo.Hp <= 0 && !currentUnitInfo.IsDead)
             {
                 currentUnitInfo.SetDead();
                 deadUnits.Add(damagedUnit);
