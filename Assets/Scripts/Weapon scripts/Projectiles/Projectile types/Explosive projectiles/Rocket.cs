@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rocket : Explosive
+public class Rocket : ExplosiveProjectile
 {
     private void Update()
     {

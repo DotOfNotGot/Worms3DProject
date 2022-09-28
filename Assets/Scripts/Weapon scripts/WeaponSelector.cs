@@ -15,12 +15,12 @@ public class WeaponSelector : MonoBehaviour
     private UnitsInputSetter _unitsInputSetter;
 
     [SerializeField]
-    private List<Weapon> weapons;
+    private List<WeaponBase> weapons;
     [SerializeField]
     private List<GameObject> weaponGOs;
 
 
-    private Weapon _currentWeapon;
+    private WeaponBase _currentWeapon;
     private GameObject _currentWeaponGameObject;
 
     // Start is called before the first frame update
@@ -70,14 +70,14 @@ public class WeaponSelector : MonoBehaviour
         if (weaponsUIList.value != 0)
         {
             _currentWeaponGameObject = weaponGOs[weaponsUIList.value];
-            _currentWeapon = _currentWeaponGameObject.GetComponent<Weapon>();
+            _currentWeapon = _currentWeaponGameObject.GetComponent<WeaponBase>();
             _currentWeaponGameObject.SetActive(true);
         }
         else
         {
             _currentWeapon = weapons[weaponsUIList.value];
         }
-        gameObject.GetComponentInParent<PlayerController>().SetCurrentWeapon(_currentWeapon);
+        gameObject.GetComponentInParent<UnitController>().SetCurrentWeapon(_currentWeapon);
     }
 
     public void CancelWeaponSelect()
@@ -96,11 +96,11 @@ public class WeaponSelector : MonoBehaviour
     {
         if (weaponGOs.Count != 0)
         {
-            _currentWeapon = weaponGOs[0].GetComponent<Weapon>();
+            _currentWeapon = weaponGOs[0].GetComponent<WeaponBase>();
         }
     }
     
-    public Weapon GetCurrentWeapon()
+    public WeaponBase GetCurrentWeapon()
     {
         return _currentWeapon;
     }

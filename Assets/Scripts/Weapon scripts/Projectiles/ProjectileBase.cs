@@ -2,15 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class ProjectileBase : MonoBehaviour
 {
     [SerializeField]
     private Rigidbody projectileRb;
 
     [SerializeField]
     private int projectileDamage;
-    public float ProjectileDamage { get => projectileDamage; }
-    public Rigidbody ProjectileRb { get => projectileRb; }
+
+    [SerializeField]
+    private int maxFramesAlive = 200;
+
+    
+    protected float ProjectileDamage { get => projectileDamage; }
+    protected Rigidbody ProjectileRb { get => projectileRb; }
+    protected int MaxFramesAlive { get => maxFramesAlive; }
 
     public void LaunchProjectile(float newLaunchForce)
     {

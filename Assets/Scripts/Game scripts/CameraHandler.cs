@@ -124,7 +124,6 @@ public class CameraHandler : MonoBehaviour
 
     public void SetCameraInputManager(PlayerInputManager newInputManager)
     {
-        Debug.Log(newInputManager,newInputManager);
         currentInputManager = newInputManager;
     }
 

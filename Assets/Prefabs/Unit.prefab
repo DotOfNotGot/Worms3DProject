@@ -655,6 +655,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teamIndex: 0
   unitIndex: 0
+  storedDamage: 0
   hp: 100
 --- !u!114 &2202277161444971905
 MonoBehaviour:
@@ -668,13 +669,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d4e1e8c2960f4d418a702d76a545497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerRb: {fileID: 2202277161444971906}
-  playerCollider: {fileID: 2202277161444971647}
-  weaponAttachPoint: {fileID: 2202277163213115226}
+  unitRb: {fileID: 2202277161444971906}
+  unitCollider: {fileID: 2202277161444971647}
   jumpForce: 100
   speed: 35
   maxSpeed: 2
-  airSpeedMultiplier: 0.4
   rotationSpeed: 5
   maxSlopeAngle: 40
   fallMultiplier: 2.5
@@ -686,6 +685,7 @@ MonoBehaviour:
   isOnSteepSlope: 0
   isJumping: 0
   shouldAddFallSpeedMultiplier: 0
+  hasShot: 0
   framesGrounded: 0
   debugRayDuration: 10
 --- !u!114 &265789582038012776
@@ -914,6 +914,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 8972800613951039002, guid: e4f2d6fb81144f043b9c22768bb9a80e, type: 3}
   - {fileID: 575941454139437228, guid: ba86fe53a4c10af45b0bc813dc18aa7b, type: 3}
+  - {fileID: 7585577372893055032, guid: 1f6918e0ab8d4f740b5e82cd625b7e40, type: 3}
   weaponGOs: []
 --- !u!1 &2665037727259441540
 GameObject:

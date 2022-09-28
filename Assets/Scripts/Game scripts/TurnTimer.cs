@@ -18,15 +18,12 @@ public class TurnTimer : MonoBehaviour
     {
         SetStoredTimerDuration(durationInSeconds);
     }
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
        UpdateTimerDisplay();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (durationInSeconds > 0)
         {
@@ -41,7 +38,8 @@ public class TurnTimer : MonoBehaviour
 
     private void UpdateTimerDisplay()
     {
-        timerElement.text = durationInSeconds.ToString();
+        var timer = (int)durationInSeconds;
+        timerElement.text = timer.ToString();
     }
 
     public void ResetTurnTimer()

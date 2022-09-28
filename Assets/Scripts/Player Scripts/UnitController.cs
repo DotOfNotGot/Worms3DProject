@@ -3,32 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class UnitController : MonoBehaviour
 {
     private PlayerInputManager _inputManager;
     private RaycastHit[] _groundHits;
     private RaycastHit _groundHit;
 
-    [Header("Player Components")]
+    [Header("Unit Components")]
     [SerializeField]
-    private Rigidbody playerRb;
+    private Rigidbody unitRb;
     [SerializeField]
-    private CapsuleCollider playerCollider;
-    [SerializeField]
-    private Transform weaponAttachPoint;
-
+    private CapsuleCollider unitCollider;
 
     private Transform _cameraMainTransform;
 
-    [Header("Player Attributes")]
+    [Header("Unit Attributes")]
     [SerializeField]
     private float jumpForce = 100f;
     [SerializeField]
     private float speed = 35f;
     [SerializeField]
     private float maxSpeed = 7f;
-    [SerializeField]
-    private float airSpeedMultiplier = 0.4f;
     [SerializeField]
     private float rotationSpeed = 5f;
     [SerializeField]
@@ -38,11 +33,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float groundDrag = 1f;
     [SerializeField]
-    private Weapon currentWeapon;
+    private WeaponBase currentWeapon;
     [SerializeField]
     private WeaponSelector playerWeaponSelector;
 
-    [Header("Player Checks")]
+    [Header("Unit Checks")]
     [SerializeField]
     private bool isGrounded;
     [SerializeField]
@@ -59,7 +54,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private int framesGrounded;
     
-
     public bool IsGrounded { get => isGrounded; }
     public bool HasShot { get => hasShot; }
     public int FramesGrounded { get => framesGrounded; }
@@ -74,7 +68,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _inputManager = GetComponent<PlayerInputManager>();
-        _distToGround = playerCollider.bounds.extents.y;
+        _distToGround = unitCollider.bounds.extents.y;
     }
 
     private void Start()
@@ -96,13 +90,13 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded)
         {
-            playerRb.drag = groundDrag;
+            unitRb.drag = groundDrag;
             shouldAddFallSpeedMultiplier = false;
 
         }
         else
         {
-            playerRb.drag = 0;
+            unitRb.drag = 0;
         }
     }
 
@@ -131,20 +125,18 @@ public class PlayerController : MonoBehaviour
             OnJump();
         }
 
-
-        if (playerRb.velocity.y < 0 && !isGrounded && shouldAddFallSpeedMultiplier)
+        if (unitRb.velocity.y < 0 && !isGrounded && shouldAddFallSpeedMultiplier)
         {
             AddFallSpeedMultiplier();
         }
 
     }
-
     public void ResetGroundedTimer()
     {
         framesGrounded = 0;
     }
 
-    public void SetCurrentWeapon(Weapon newWeapon)
+    public void SetCurrentWeapon(WeaponBase newWeapon)
     {
         currentWeapon = newWeapon;
         playerWeaponSelector.SetInputManager(_inputManager);
@@ -154,7 +146,7 @@ public class PlayerController : MonoBehaviour
     {
         if (currentWeapon == null) return;
 
-        if (playerRb.velocity.magnitude < -1 || playerRb.velocity.magnitude > 1)
+        if (unitRb.velocity.magnitude < -1 || unitRb.velocity.magnitude > 1)
         {
             currentWeapon.gameObject.SetActive(false);
         }
@@ -164,22 +156,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void SetHasShot()
+    public void SetHasShot(bool newState)
     {
-        hasShot = true;
+        hasShot = newState;
     }
 
     private void AddFallSpeedMultiplier()
     {
-        playerRb.velocity += (fallMultiplier) * Physics.gravity.y * Time.deltaTime * Vector3.up;
+        unitRb.velocity += (fallMultiplier) * Physics.gravity.y * Time.deltaTime * Vector3.up;
     }
 
     private void OnMove()
     {
-        playerRb.AddForce(_moveDirection * (speed * 20f), ForceMode.Force);
-        Vector3 clampedPlayerVelocity = Vector3.ClampMagnitude(new Vector3(playerRb.velocity.x, 0, playerRb.velocity.z), maxSpeed);
-        clampedPlayerVelocity = new Vector3(clampedPlayerVelocity.x, playerRb.velocity.y, clampedPlayerVelocity.z);
-        playerRb.velocity = clampedPlayerVelocity;
+        unitRb.AddForce(_moveDirection * (speed * 20f), ForceMode.Force);
+        Vector3 clampedPlayerVelocity = Vector3.ClampMagnitude(new Vector3(unitRb.velocity.x, 0, unitRb.velocity.z), maxSpeed);
+        clampedPlayerVelocity = new Vector3(clampedPlayerVelocity.x, unitRb.velocity.y, clampedPlayerVelocity.z);
+        unitRb.velocity = clampedPlayerVelocity;
 
         float targetAngle = Mathf.Atan2(_inputManager.RawMoveInput.x, _inputManager.RawMoveInput.y) * Mathf.Rad2Deg + _cameraMainTransform.eulerAngles.y;
         Quaternion targetRotation = Quaternion.Euler(transform.rotation.x, targetAngle, transform.rotation.z);
@@ -188,8 +180,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnJump()
     {
-        playerRb.velocity = new Vector3(playerRb.velocity.x, 0, playerRb.velocity.z);
-        playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        unitRb.velocity = new Vector3(unitRb.velocity.x, 0, unitRb.velocity.z);
+        unitRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         isJumping = false;
         shouldAddFallSpeedMultiplier = true;
     }

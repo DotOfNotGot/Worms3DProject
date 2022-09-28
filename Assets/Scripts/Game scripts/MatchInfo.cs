@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class MatchInfo : MonoBehaviour
@@ -48,7 +49,7 @@ public class MatchInfo : MonoBehaviour
         turnTimerLength = turnTimer;
     }
 
-    public void SetPostMatchInfo(GameObject[][] teamsAndUnits, int teamIndex)
+    public void SetPostMatchInfo([CanBeNull] Team winningTeam, int teamIndex)
     {
         if (teamIndex == -1)
         {
@@ -57,7 +58,7 @@ public class MatchInfo : MonoBehaviour
         else
         {
             wasWin = true;
-            foreach (var unit in teamsAndUnits[teamIndex])
+            foreach (var unit in winningTeam.Units)
             {
                 winningTeamUnits.Add(unit);
             }
