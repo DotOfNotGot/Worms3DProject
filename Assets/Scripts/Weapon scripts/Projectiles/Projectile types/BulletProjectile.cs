@@ -16,9 +16,14 @@ public class BulletProjectile : ProjectileBase
             Destroy(gameObject);
         }
     }
+
+
     private void OnCollisionEnter(Collision collision)
     {
         var currentCollider = collision.collider;
+
+        if (currentCollider.CompareTag("Projectile")) return;
+
         if (currentCollider.CompareTag("Player"))
         {
             currentCollider.GetComponent<UnitInformation>().StoreDamage(ProjectileDamage);

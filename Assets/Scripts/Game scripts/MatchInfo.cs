@@ -26,6 +26,7 @@ public class MatchInfo : MonoBehaviour
     private List<GameObject> winningTeamUnits;
     
     public List<GameObject> WinningTeamUnits { get => winningTeamUnits; }
+    public bool WasWin { get => wasWin; }
     
     public static MatchInfo Instance { get; private set; }
     
@@ -49,7 +50,7 @@ public class MatchInfo : MonoBehaviour
         turnTimerLength = turnTimer;
     }
 
-    public void SetPostMatchInfo([CanBeNull] Team winningTeam, int teamIndex)
+    public void SetPostMatchInfo([CanBeNull] Team passedWinningTeam, int teamIndex)
     {
         if (teamIndex == -1)
         {
@@ -58,10 +59,22 @@ public class MatchInfo : MonoBehaviour
         else
         {
             wasWin = true;
-            foreach (var unit in winningTeam.Units)
+            winningTeamUnits = new List<GameObject>(passedWinningTeam.Units);
+            foreach (var unit in winningTeamUnits)
             {
-                winningTeamUnits.Add(unit);
+                unit.transform.parent = null;
+                DontDestroyOnLoad(unit.gameObject);
+                DisableWinningUnitComponents(unit);
             }
         }
     }
+
+    private void DisableWinningUnitComponents(GameObject unit)
+    {
+        unit.GetComponent<Rigidbody>().isKinematic = true;
+        unit.GetComponent<UnitController>().enabled = false;
+        unit.GetComponent<PlayerInputManager>().enabled = false;
+        unit.GetComponentInChildren<UnitUIHandler>().enabled = false;
+    }
+
 }

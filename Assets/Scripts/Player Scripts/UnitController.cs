@@ -155,7 +155,6 @@ public class UnitController : MonoBehaviour
             currentWeapon.gameObject.SetActive(true);
         }
     }
-
     public void SetHasShot(bool newState)
     {
         hasShot = newState;

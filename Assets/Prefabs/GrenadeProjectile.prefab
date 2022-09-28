@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2647675799778900618}
   m_Layer: 3
   m_Name: GrenadeProjectile
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -129,7 +129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectileRb: {fileID: 2635001443950446894}
   projectileDamage: 45
+  maxFramesAlive: 200
   explosionRadius: 5
   explosionForce: 400
   explosionUpwardsModifier: 5
-  maxFramesAlive: 200

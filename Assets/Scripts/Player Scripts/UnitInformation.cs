@@ -18,8 +18,8 @@ public class UnitInformation : MonoBehaviour
     private int hp = 100;
 
     private int _storedHp = 0;
-    
-    public int TeamIndex { get => teamIndex; }    
+
+    public int TeamIndex { get => teamIndex; }
     public int StoredHp { get => _storedHp; }
     public int StoredDamage { get => storedDamage; }
 
@@ -70,20 +70,19 @@ public class UnitInformation : MonoBehaviour
         {
             hp--;
             _uiHandler.SetPlayerInfoDisplay(hp);
+            return;
+        }
+
+        if (_storedHp - storedDamage <= 0)
+        {
+            hp = -1;
         }
         else
         {
-            if (_storedHp - storedDamage <= 0)
-            {
-                hp = -1;
-            }
-            else
-            {
-                hp = _storedHp - storedDamage;
-            }
-            _storedHp = hp;
-            storedDamage = 0;
+            hp = _storedHp - storedDamage;
         }
+        _storedHp = hp;
+        storedDamage = 0;
     }
 
     public void SetDead()

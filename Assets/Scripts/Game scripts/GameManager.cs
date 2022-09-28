@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR.Haptics;
 
@@ -107,7 +108,9 @@ public class GameManager : MonoBehaviour
                     _matchInfo.SetPostMatchInfo(null, -1);
                 }
 
-                break;
+                SceneManager.LoadScene(2);
+
+                return;
         }
 
         SetNonActiveTeamsKinematic();
@@ -125,6 +128,7 @@ public class GameManager : MonoBehaviour
     private void HandleCurrentlyInTurn()
     {
         CheckForDamagedUnits();
+        CheckForTurnAction();
     }
 
     private void CheckForDamagedUnits()

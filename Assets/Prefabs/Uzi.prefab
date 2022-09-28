@@ -101,9 +101,10 @@ MonoBehaviour:
   weaponSpawnPoint: {fileID: 8755481009984572052}
   projectilePrefab: {fileID: 4431833837728474444, guid: 0a68b4e1c3e24f94d86537fa5051980a,
     type: 3}
-  launchForce: 50
+  launchForce: 80
   weaponUses: 2
-  amountOfBullets: 5
+  amountOfBullets: 20
+  timeBetweenProjectiles: 0.01
 --- !u!1 &7880598143637750544
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4431833837728474445}
   m_Layer: 0
   m_Name: Bullet
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -112,9 +112,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileRb: {fileID: 4431833837728474445}
-  projectileDamage: 15
-  maxFramesAlive: 200
-  bulletPushForce: 10
+  projectileDamage: 1
+  maxFramesAlive: 10
+  bulletPushForce: 30
 --- !u!54 &4431833837728474445
 Rigidbody:
   m_ObjectHideFlags: 0
