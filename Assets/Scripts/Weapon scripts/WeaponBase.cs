@@ -7,6 +7,9 @@ public class WeaponBase : MonoBehaviour
     [SerializeField]
     private string weaponName;
 
+    [SerializeField] 
+    private Transform weaponSpawnPoint;
+    
     protected PlayerInputManager CurrentInputManager { get; private set; }
 
     [SerializeField] 
@@ -21,17 +24,8 @@ public class WeaponBase : MonoBehaviour
     {
         SetInputManager();
     }
-
-    
-
     protected void UseWeapon(int amountOfProjectiles, float modifier)
     {
-        for (int i = 0; i < amountOfProjectiles; i++)
-        {
-            var currentProjectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
-            currentProjectile.GetComponent<ProjectileBase>().LaunchProjectile(launchForce * modifier);
-        }
-
         if (weaponUses == 0)
         {
             CurrentInputManager.gameObject.GetComponent<UnitController>().SetHasShot(true);
@@ -40,6 +34,13 @@ public class WeaponBase : MonoBehaviour
         {
             weaponUses--;
         }
+        
+        for (int i = 0; i < amountOfProjectiles; i++)
+        {
+            var currentProjectile = Instantiate(projectilePrefab, weaponSpawnPoint.position, transform.rotation);
+            currentProjectile.GetComponent<ProjectileBase>().LaunchProjectile(launchForce * modifier);
+        }
+        
     }
     private void SetInputManager()
     {
