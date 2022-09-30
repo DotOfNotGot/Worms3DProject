@@ -97,12 +97,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ed18b4884ec8d14aa165c31286e12d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: Bazooka
-  weaponSpawnPoint: {fileID: 6725060115144910675}
-  projectilePrefab: {fileID: 9093934692171033021, guid: 637e24a109918ae40a68085f6782988e,
+  _weaponName: Bazooka
+  _projectileSpawnPoint: {fileID: 6725060115144910675}
+  _projectilePrefab: {fileID: 9093934692171033021, guid: 637e24a109918ae40a68085f6782988e,
     type: 3}
-  launchForce: 50
-  weaponUses: 1
+  _launchForce: 50
+  _weaponUses: 1
 --- !u!1 &9059323251463006839
 GameObject:
   m_ObjectHideFlags: 0

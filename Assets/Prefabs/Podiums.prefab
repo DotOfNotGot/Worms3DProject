@@ -408,9 +408,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c7219fd8a4ed3644a26577e9265a722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  winningTeamUnits: []
-  sceneCamera: {fileID: 0}
-  podiumTransforms: []
+  _winningTeamUnits: []
+  _sceneCamera: {fileID: 0}
+  _podiumTransforms:
+  - {fileID: 6878575436031485958}
+  - {fileID: 85037427794373966}
+  - {fileID: 6069528246113306017}
+  - {fileID: 5416918879323483871}
 --- !u!1 &6734131840802260690
 GameObject:
   m_ObjectHideFlags: 0

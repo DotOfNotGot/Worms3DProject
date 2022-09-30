@@ -111,10 +111,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16ac999f5e7cb354db928110ab703a21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileRb: {fileID: 4431833837728474445}
-  projectileDamage: 1
-  maxFramesAlive: 10
-  bulletPushForce: 30
+  _projectileRb: {fileID: 4431833837728474445}
+  _projectileDamage: 1
+  _maxFramesAlive: 200
+  _bulletPushForce: 10
 --- !u!54 &4431833837728474445
 Rigidbody:
   m_ObjectHideFlags: 0

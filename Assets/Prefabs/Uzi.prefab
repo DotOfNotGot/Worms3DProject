@@ -97,14 +97,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bba25cee8c48ed940b1d33dbd0b73c8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: Uzi
-  weaponSpawnPoint: {fileID: 8755481009984572052}
-  projectilePrefab: {fileID: 4431833837728474444, guid: 0a68b4e1c3e24f94d86537fa5051980a,
+  _weaponName: Uzi
+  _projectileSpawnPoint: {fileID: 8755481009984572052}
+  _projectilePrefab: {fileID: 4431833837728474444, guid: 0a68b4e1c3e24f94d86537fa5051980a,
     type: 3}
-  launchForce: 80
-  weaponUses: 2
-  amountOfBullets: 20
-  timeBetweenProjectiles: 0.01
+  _launchForce: 100
+  _weaponUses: 2
+  _amountOfBullets: 25
+  _timeBetweenProjectiles: 0.01
 --- !u!1 &7880598143637750544
 GameObject:
   m_ObjectHideFlags: 0

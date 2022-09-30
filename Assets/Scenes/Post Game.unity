@@ -1140,6 +1140,11 @@ PrefabInstance:
       objectReference: {fileID: 1909503028}
     - target: {fileID: 5762579152072960403, guid: 20cfb164678002645a382df23cc2bd6e,
         type: 3}
+      propertyPath: _sceneCamera
+      value: 
+      objectReference: {fileID: 1909503028}
+    - target: {fileID: 5762579152072960403, guid: 20cfb164678002645a382df23cc2bd6e,
+        type: 3}
       propertyPath: podiumTransforms.Array.size
       value: 4
       objectReference: {fileID: 0}

@@ -5,29 +5,25 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class CameraHandler : MonoBehaviour
 {
-    [SerializeField] private PlayerInputManager currentInputManager;
-
-    private enum _cameraStates
-    {
-    }
+    [SerializeField] private PlayerInputManager _currentInputManager;
 
 
-    [SerializeField] private Transform target;
+    [SerializeField] private Transform _target;
     private Transform _oldTarget;
 
-    [SerializeField, Range(0f, 20f)] private float distance = 5f;
+    [SerializeField, Range(0f, 20f)] private float _distance = 5f;
 
-    [SerializeField, Min(0f)] private float focusRadius = 1f;
+    [SerializeField, Min(0f)] private float _focusRadius = 1f;
 
-    [SerializeField, Range(0f, 1f)] float focusCentering = 0.5f;
+    [SerializeField, Range(0f, 1f)] float _focusCentering = 0.5f;
 
-    [SerializeField, Min(0f)] private float allignDelay = 5f;
+    [SerializeField, Min(0f)] private float _allignDelay = 5f;
 
-    [SerializeField, Range(1f, 360f)] private float rotationSpeed = 90f;
+    [SerializeField, Range(1f, 360f)] private float _rotationSpeed = 90f;
 
-    [SerializeField, Range(-89, 89f)] private float minVerticalAngle = -30f, maxVerticalAngle = 60f;
+    [SerializeField, Range(-89, 89f)] private float _minVerticalAngle = -30f, _maxVerticalAngle = 60f;
 
-    [SerializeField] private LayerMask obstructionMask = -1;
+    [SerializeField] private LayerMask _obstructionMask = -1;
 
     private Vector3 _focusPoint;
     Vector2 _orbitAngles = new Vector2(45f, 0f);
@@ -36,7 +32,7 @@ public class CameraHandler : MonoBehaviour
 
     private float _lastManualRotationTime;
 
-    [SerializeField] private Camera thisCamera;
+    [SerializeField] private Camera _thisCamera;
 
     private bool _readyForRound = true;
 
@@ -50,15 +46,15 @@ public class CameraHandler : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        thisCamera = GetComponent<Camera>();
+        _thisCamera = GetComponent<Camera>();
         transform.localRotation = Quaternion.Euler(_orbitAngles);
     }
 
     private void Update()
     {
-        if (currentInputManager != null)
+        if (_currentInputManager != null)
         {
-            _rotationInput = new Vector2(currentInputManager.RawCameraRotateInput.y, currentInputManager.RawCameraRotateInput.x);
+            _rotationInput = new Vector2(_currentInputManager.RawCameraRotateInput.y, _currentInputManager.RawCameraRotateInput.x);
         }
     }
 
@@ -70,17 +66,6 @@ public class CameraHandler : MonoBehaviour
 
         UpdateFocusPoint();
 
-        // if (Vector3.Distance(_focusPoint, target.position) > 1 && currentInputManager != enabled)
-        // {
-        //     _readyForRound = false;
-        //     _focusPoint = Vector3.Lerp(_focusPoint, target.position, 5f * Time.deltaTime);
-        // }
-        // else
-        // {
-        //     StartCoroutine(SetReadyForRoundTrue());
-        // }
-
-
         Quaternion lookRotation;
         if (ManualRotation() || AutomaticRotation())
         {
@@ -89,20 +74,20 @@ public class CameraHandler : MonoBehaviour
         }
         else
         {
-            lookRotation = target.rotation;
+            lookRotation = _target.rotation;
         }
 
         Vector3 lookDirection = lookRotation * Vector3.forward;
-        Vector3 lookPosition = _focusPoint - lookDirection * distance;
+        Vector3 lookPosition = _focusPoint - lookDirection * _distance;
 
-        Vector3 rectOffset = lookDirection * thisCamera.nearClipPlane;
+        Vector3 rectOffset = lookDirection * _thisCamera.nearClipPlane;
         Vector3 rectPosition = lookPosition + rectOffset;
-        Vector3 castFrom = target.position;
+        Vector3 castFrom = _target.position;
         Vector3 castLine = rectPosition - castFrom;
         float castDistance = castLine.magnitude;
         Vector3 castDirection = castLine / castDistance;
         if (Physics.BoxCast(castFrom, CameraHalfExtends, castDirection, out RaycastHit hit, lookRotation, castDistance,
-                obstructionMask))
+                _obstructionMask))
         {
             _hit = hit;
             rectPosition = castFrom + castDirection * hit.distance;
@@ -114,17 +99,17 @@ public class CameraHandler : MonoBehaviour
 
     public void SetCameraTarget(Transform newTarget)
     {
-        if (target != null && target != newTarget)
+        if (_target != null && _target != newTarget)
         {
-            _oldTarget = target;
+            _oldTarget = _target;
         }
 
-        target = newTarget;
+        _target = newTarget;
     }
 
     public void SetCameraInputManager(PlayerInputManager newInputManager)
     {
-        currentInputManager = newInputManager;
+        _currentInputManager = newInputManager;
     }
 
     private bool ManualRotation()
@@ -132,7 +117,7 @@ public class CameraHandler : MonoBehaviour
         const float e = 0.001f;
         if (_rotationInput.x < e || _rotationInput.x > e || _rotationInput.y < e || _rotationInput.y > e)
         {
-            _orbitAngles += rotationSpeed * Time.unscaledDeltaTime * _rotationInput;
+            _orbitAngles += _rotationSpeed * Time.unscaledDeltaTime * _rotationInput;
             _lastManualRotationTime = Time.unscaledTime;
             return true;
         }
@@ -142,7 +127,7 @@ public class CameraHandler : MonoBehaviour
 
     private bool AutomaticRotation()
     {
-        if (Time.unscaledTime - _lastManualRotationTime < allignDelay)
+        if (Time.unscaledTime - _lastManualRotationTime < _allignDelay)
         {
             return false;
         }
@@ -153,7 +138,7 @@ public class CameraHandler : MonoBehaviour
 
     private void ConstrainAngles()
     {
-        _orbitAngles.x = Mathf.Clamp(_orbitAngles.x, minVerticalAngle, maxVerticalAngle);
+        _orbitAngles.x = Mathf.Clamp(_orbitAngles.x, _minVerticalAngle, _maxVerticalAngle);
 
         if (_orbitAngles.y < 0f)
         {
@@ -167,19 +152,19 @@ public class CameraHandler : MonoBehaviour
 
     private void UpdateFocusPoint()
     {
-        Vector3 targetPoint = target.position;
-        if (focusRadius > 0f)
+        Vector3 targetPoint = _target.position;
+        if (_focusRadius > 0f)
         {
             float distance = Vector3.Distance(targetPoint, _focusPoint);
             float t = 1f;
-            if (distance > 0.01f && focusCentering > 0f)
+            if (distance > 0.01f && _focusCentering > 0f)
             {
-                t = Mathf.Pow(1f - focusCentering, Time.unscaledDeltaTime);
+                t = Mathf.Pow(1f - _focusCentering, Time.unscaledDeltaTime);
             }
 
-            if (distance > focusRadius)
+            if (distance > _focusRadius)
             {
-                t = Mathf.Min(t, focusRadius / distance);
+                t = Mathf.Min(t, _focusRadius / distance);
             }
 
             _focusPoint = Vector3.Lerp(targetPoint, _focusPoint, t);
@@ -206,8 +191,8 @@ public class CameraHandler : MonoBehaviour
         get
         {
             Vector3 halfExtends;
-            halfExtends.y = thisCamera.nearClipPlane * Mathf.Tan(0.5f * Mathf.Deg2Rad * thisCamera.fieldOfView);
-            halfExtends.x = halfExtends.y * thisCamera.aspect;
+            halfExtends.y = _thisCamera.nearClipPlane * Mathf.Tan(0.5f * Mathf.Deg2Rad * _thisCamera.fieldOfView);
+            halfExtends.x = halfExtends.y * _thisCamera.aspect;
             halfExtends.z = 0f;
             return halfExtends;
         }
@@ -215,15 +200,15 @@ public class CameraHandler : MonoBehaviour
 
     private void OnValidate()
     {
-        if (maxVerticalAngle < minVerticalAngle)
+        if (_maxVerticalAngle < _minVerticalAngle)
         {
-            maxVerticalAngle = minVerticalAngle;
+            _maxVerticalAngle = _minVerticalAngle;
         }
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(thisCamera.transform.position, _hit.point);
+        Gizmos.DrawLine(_thisCamera.transform.position, _hit.point);
     }
 }

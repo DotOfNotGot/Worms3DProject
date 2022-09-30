@@ -127,9 +127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c43895dd937b04da5488d5b24caa48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileRb: {fileID: 2635001443950446894}
-  projectileDamage: 45
-  maxFramesAlive: 200
-  explosionRadius: 5
-  explosionForce: 400
-  explosionUpwardsModifier: 5
+  _projectileRb: {fileID: 2635001443950446894}
+  _projectileDamage: 45
+  _maxFramesAlive: 200
+  _explosionRadius: 5
+  _explosionForce: 400
+  _explosionUpwardsModifier: 5

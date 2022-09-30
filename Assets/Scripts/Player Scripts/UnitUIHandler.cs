@@ -10,7 +10,7 @@ public class UnitUIHandler : MonoBehaviour
     private Canvas _playerInfoCanvas;
 
     [SerializeField]
-    private TextMeshProUGUI unitHPDisplay;
+    private TextMeshProUGUI _unitHPDisplay;
 
     // Start is called before the first frame update
     void Awake()
@@ -31,7 +31,7 @@ public class UnitUIHandler : MonoBehaviour
         {
             newHp = 0;
         }
-        unitHPDisplay.text = newHp.ToString();
+        _unitHPDisplay.text = newHp.ToString();
     }
 
 }

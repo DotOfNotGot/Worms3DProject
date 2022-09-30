@@ -5,24 +5,20 @@ using UnityEngine;
 public class WeaponBase : MonoBehaviour
 {
     [SerializeField]
-    private string weaponName;
+    private string _weaponName;
 
     [SerializeField] 
-    private Transform weaponSpawnPoint;
+    private Transform _projectileSpawnPoint;
     
     protected PlayerInputManager CurrentInputManager { get; private set; }
 
     [SerializeField] 
-    private GameObject projectilePrefab;
+    private GameObject _projectilePrefab;
     [SerializeField] 
-    private float launchForce = 50f;
+    private float _launchForce = 50f;
 
     [SerializeField]
-    private int weaponUses = 1;
-
-
-
-
+    private int _weaponUses = 1;
     
     private void Awake()
     {
@@ -30,18 +26,18 @@ public class WeaponBase : MonoBehaviour
     }
     protected void UseWeapon(float modifier)
     {
-        var currentProjectile = Instantiate(projectilePrefab, weaponSpawnPoint.position, transform.rotation);
-        currentProjectile.GetComponent<ProjectileBase>().LaunchProjectile(launchForce * modifier);
-
-        if (weaponUses == 0)
-        {
-            CurrentInputManager.gameObject.GetComponent<UnitController>().SetHasShot(true);
-        }
+        
+        var currentProjectile = Instantiate(_projectilePrefab, _projectileSpawnPoint.position, transform.rotation);
+        currentProjectile.GetComponent<ProjectileBase>().LaunchProjectile(_launchForce * modifier);
     }
 
     protected void HandleWeaponUses()
     {
-        weaponUses--;
+        _weaponUses--;
+        if (_weaponUses == 0)
+        {
+            CurrentInputManager.gameObject.GetComponent<UnitController>().SetHasShot(true);
+        }
     }
 
     private void SetInputManager()

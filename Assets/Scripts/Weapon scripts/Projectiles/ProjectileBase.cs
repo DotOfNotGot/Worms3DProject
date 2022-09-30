@@ -5,21 +5,21 @@ using UnityEngine;
 public class ProjectileBase : MonoBehaviour
 {
     [SerializeField]
-    private Rigidbody projectileRb;
+    private Rigidbody _projectileRb;
 
     [SerializeField]
-    private int projectileDamage;
+    private int _projectileDamage;
 
     [SerializeField]
-    private int maxFramesAlive = 200;
+    private int _maxFramesAlive = 200;
 
     
-    protected float ProjectileDamage { get => projectileDamage; }
-    protected Rigidbody ProjectileRb { get => projectileRb; }
-    protected int MaxFramesAlive { get => maxFramesAlive; }
+    protected float ProjectileDamage { get => _projectileDamage; }
+    protected Rigidbody ProjectileRb { get => _projectileRb; }
+    protected int MaxFramesAlive { get => _maxFramesAlive; }
 
     public void LaunchProjectile(float newLaunchForce)
     {
-        projectileRb.velocity = transform.up * newLaunchForce;
+        _projectileRb.velocity = transform.up * newLaunchForce;
     }
 }

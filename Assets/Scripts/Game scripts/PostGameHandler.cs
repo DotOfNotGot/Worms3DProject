@@ -8,15 +8,15 @@ public class PostGameHandler : MonoBehaviour
     private MatchInfo _matchInfo;
 
     [SerializeField]
-    private List<GameObject> winningTeamUnits;
+    private List<GameObject> _winningTeamUnits;
 
     [SerializeField]
-    private Camera sceneCamera;
+    private Camera _sceneCamera;
 
     private bool _wasWin = false;
 
     [SerializeField]
-    private Transform[] podiumTransforms;
+    private Transform[] _podiumTransforms;
 
 
     // Start is called before the first frame update
@@ -29,16 +29,16 @@ public class PostGameHandler : MonoBehaviour
     {
         if (!_wasWin)
         {
-            sceneCamera.transform.position = new Vector3(8, sceneCamera.transform.position.y, sceneCamera.transform.position.z);
+            _sceneCamera.transform.position = new Vector3(8, _sceneCamera.transform.position.y, _sceneCamera.transform.position.z);
         }
         else
         {
-            sceneCamera.transform.position = new Vector3(-27, sceneCamera.transform.position.y, sceneCamera.transform.position.z);
-            for (int i = 0; i < winningTeamUnits.Count; i++)
+            _sceneCamera.transform.position = new Vector3(-27, _sceneCamera.transform.position.y, _sceneCamera.transform.position.z);
+            for (int i = 0; i < _winningTeamUnits.Count; i++)
             {
-                winningTeamUnits[i].transform.SetParent(podiumTransforms[i].GetChild(0));
-                winningTeamUnits[i].transform.rotation = podiumTransforms[i].GetChild(0).transform.rotation;
-                winningTeamUnits[i].transform.localPosition = new Vector3(0, 0, 0);
+                _winningTeamUnits[i].transform.SetParent(_podiumTransforms[i]);
+                _winningTeamUnits[i].transform.rotation = _podiumTransforms[i].transform.rotation;
+                _winningTeamUnits[i].transform.localPosition = new Vector3(0, 0, 0);
             }
         }
     }
@@ -48,7 +48,7 @@ public class PostGameHandler : MonoBehaviour
         _matchInfo = MatchInfo.Instance;
         if (_matchInfo.WasWin)
         {
-            winningTeamUnits = _matchInfo.WinningTeamUnits;
+            _winningTeamUnits = _matchInfo.WinningTeamUnits;
         }
 
         _wasWin = _matchInfo.WasWin;

@@ -653,10 +653,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f2f35ed97082d44a8ede3d39ba8b0b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teamIndex: 0
-  unitIndex: 0
-  storedDamage: 0
-  hp: 100
+  _teamIndex: 0
+  _unitIndex: 0
+  _storedDamage: 0
+  _hp: 100
 --- !u!114 &2202277161444971905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -669,25 +669,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d4e1e8c2960f4d418a702d76a545497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitRb: {fileID: 2202277161444971906}
-  unitCollider: {fileID: 2202277161444971647}
-  jumpForce: 100
-  speed: 35
-  maxSpeed: 2
-  rotationSpeed: 5
-  maxSlopeAngle: 40
-  fallMultiplier: 2.5
-  groundDrag: 1
-  currentWeapon: {fileID: 0}
-  playerWeaponSelector: {fileID: 4641211885865242220}
-  isGrounded: 0
-  isOnSlope: 0
-  isOnSteepSlope: 0
-  isJumping: 0
-  shouldAddFallSpeedMultiplier: 0
-  hasShot: 0
-  framesGrounded: 0
-  debugRayDuration: 10
+  _unitRb: {fileID: 2202277161444971906}
+  _unitCollider: {fileID: 2202277161444971647}
+  _jumpForce: 100
+  _speed: 35
+  _maxSpeed: 3
+  _rotationSpeed: 5
+  _maxSlopeAngle: 40
+  _fallMultiplier: 2.5
+  _groundDrag: 1
+  _currentWeapon: {fileID: 0}
+  _playerWeaponSelector: {fileID: 4641211885865242220}
+  _isGrounded: 0
+  _isOnSlope: 0
+  _isOnSteepSlope: 0
+  _isJumping: 0
+  _shouldAddFallSpeedMultiplier: 0
+  _hasShot: 0
+  _framesGrounded: 0
+  _debugRayDuration: 10
 --- !u!114 &265789582038012776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -700,8 +700,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28fb800b786b7b24fb9b36e3fd7e3f4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rawMoveInput: {x: 0, y: 0}
-  rawCameraRotateInput: {x: 0, y: 0}
+  _rawMoveInput: {x: 0, y: 0}
+  _rawCameraRotateInput: {x: 0, y: 0}
 --- !u!114 &4426729410103390728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -908,14 +908,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 029739ba47f25374699fd3b39d93e6f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponsUIList: {fileID: 936750702787235813}
-  weaponSelectorObject: {fileID: 8193521975853514440}
-  weapons:
+  _weaponsUIList: {fileID: 936750702787235813}
+  _weaponSelectorObject: {fileID: 8193521975853514440}
+  _weapons:
   - {fileID: 0}
   - {fileID: 8972800613951039002, guid: e4f2d6fb81144f043b9c22768bb9a80e, type: 3}
   - {fileID: 575941454139437228, guid: ba86fe53a4c10af45b0bc813dc18aa7b, type: 3}
   - {fileID: 7585577372893055032, guid: 1f6918e0ab8d4f740b5e82cd625b7e40, type: 3}
-  weaponGOs: []
+  _weaponGOs: []
 --- !u!1 &2665037727259441540
 GameObject:
   m_ObjectHideFlags: 0
@@ -1497,7 +1497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46e796ebff73f3e47a1f033634c39bea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitHPDisplay: {fileID: 4431508451932356774}
+  _unitHPDisplay: {fileID: 4431508451932356774}
 --- !u!1 &5137190073842103239
 GameObject:
   m_ObjectHideFlags: 0

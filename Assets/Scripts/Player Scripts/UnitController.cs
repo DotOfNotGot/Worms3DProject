@@ -11,56 +11,56 @@ public class UnitController : MonoBehaviour
 
     [Header("Unit Components")]
     [SerializeField]
-    private Rigidbody unitRb;
+    private Rigidbody _unitRb;
     [SerializeField]
-    private CapsuleCollider unitCollider;
+    private CapsuleCollider _unitCollider;
 
     private Transform _cameraMainTransform;
 
     [Header("Unit Attributes")]
     [SerializeField]
-    private float jumpForce = 100f;
+    private float _jumpForce = 100f;
     [SerializeField]
-    private float speed = 35f;
+    private float _speed = 35f;
     [SerializeField]
-    private float maxSpeed = 7f;
+    private float _maxSpeed = 7f;
     [SerializeField]
-    private float rotationSpeed = 5f;
+    private float _rotationSpeed = 5f;
     [SerializeField]
-    private float maxSlopeAngle = 40f;
+    private float _maxSlopeAngle = 40f;
     [SerializeField]
-    private float fallMultiplier = 2.5f;
+    private float _fallMultiplier = 2.5f;
     [SerializeField]
-    private float groundDrag = 1f;
+    private float _groundDrag = 1f;
     [SerializeField]
-    private WeaponBase currentWeapon;
+    private WeaponBase _currentWeapon;
     [SerializeField]
-    private WeaponSelector playerWeaponSelector;
+    private WeaponSelector _playerWeaponSelector;
 
     [Header("Unit Checks")]
     [SerializeField]
-    private bool isGrounded;
+    private bool _isGrounded;
     [SerializeField]
-    private bool isOnSlope;
+    private bool _isOnSlope;
     [SerializeField]
-    private bool isOnSteepSlope;
+    private bool _isOnSteepSlope;
     [SerializeField]
-    private bool isJumping;
+    private bool _isJumping;
     [SerializeField]
-    private bool shouldAddFallSpeedMultiplier;
+    private bool _shouldAddFallSpeedMultiplier;
     [SerializeField]
-    private bool hasShot;
+    private bool _hasShot;
     
     [SerializeField]
-    private int framesGrounded;
+    private int _framesGrounded;
     
-    public bool IsGrounded { get => isGrounded; }
-    public bool HasShot { get => hasShot; }
-    public int FramesGrounded { get => framesGrounded; }
+    public bool IsGrounded { get => _isGrounded; }
+    public bool HasShot { get => _hasShot; }
+    public int FramesGrounded { get => _framesGrounded; }
 
     [Header("Debug Attributes")]
     [SerializeField]
-    private float debugRayDuration = 10f;
+    private float _debugRayDuration = 10f;
 
     private float _distToGround;
     private Vector3 _moveDirection;
@@ -68,7 +68,7 @@ public class UnitController : MonoBehaviour
     private void Awake()
     {
         _inputManager = GetComponent<PlayerInputManager>();
-        _distToGround = unitCollider.bounds.extents.y;
+        _distToGround = _unitCollider.bounds.extents.y;
     }
 
     private void Start()
@@ -88,15 +88,15 @@ public class UnitController : MonoBehaviour
             StartCoroutine(JumpBuffer());
         }
 
-        if (isGrounded)
+        if (_isGrounded)
         {
-            unitRb.drag = groundDrag;
-            shouldAddFallSpeedMultiplier = false;
+            _unitRb.drag = _groundDrag;
+            _shouldAddFallSpeedMultiplier = false;
 
         }
         else
         {
-            unitRb.drag = 0;
+            _unitRb.drag = 0;
         }
     }
 
@@ -105,27 +105,27 @@ public class UnitController : MonoBehaviour
 
         HandleWeapon();
 
-        if (isGrounded)
+        if (_isGrounded)
         {
-            framesGrounded++;
+            _framesGrounded++;
         }
         else
         {
-            framesGrounded = 0;
+            _framesGrounded = 0;
         }
         GroundCheck();
 
-        if (isGrounded && _moveDirection != Vector3.zero)
+        if (_isGrounded && _moveDirection != Vector3.zero)
         {
             OnMove();
         }
 
-        if (isJumping && isGrounded)
+        if (_isJumping && _isGrounded)
         {
             OnJump();
         }
 
-        if (unitRb.velocity.y < 0 && !isGrounded && shouldAddFallSpeedMultiplier)
+        if (_unitRb.velocity.y < 0 && !_isGrounded && _shouldAddFallSpeedMultiplier)
         {
             AddFallSpeedMultiplier();
         }
@@ -133,63 +133,63 @@ public class UnitController : MonoBehaviour
     }
     public void ResetGroundedTimer()
     {
-        framesGrounded = 0;
+        _framesGrounded = 0;
     }
 
     public void SetCurrentWeapon(WeaponBase newWeapon)
     {
-        currentWeapon = newWeapon;
-        playerWeaponSelector.SetInputManager(_inputManager);
+        _currentWeapon = newWeapon;
+        _playerWeaponSelector.SetInputManager(_inputManager);
     }
 
     private void HandleWeapon()
     {
-        if (currentWeapon == null) return;
+        if (_currentWeapon == null) return;
 
-        if (unitRb.velocity.magnitude < -1 || unitRb.velocity.magnitude > 1)
+        if (_unitRb.velocity.magnitude < -1 || _unitRb.velocity.magnitude > 1)
         {
-            currentWeapon.gameObject.SetActive(false);
+            _currentWeapon.gameObject.SetActive(false);
         }
         else
         {
-            currentWeapon.gameObject.SetActive(true);
+            _currentWeapon.gameObject.SetActive(true);
         }
     }
     public void SetHasShot(bool newState)
     {
-        hasShot = newState;
+        _hasShot = newState;
     }
 
     private void AddFallSpeedMultiplier()
     {
-        unitRb.velocity += (fallMultiplier) * Physics.gravity.y * Time.deltaTime * Vector3.up;
+        _unitRb.velocity += (_fallMultiplier) * Physics.gravity.y * Time.deltaTime * Vector3.up;
     }
 
     private void OnMove()
     {
-        unitRb.AddForce(_moveDirection * (speed * 20f), ForceMode.Force);
-        Vector3 clampedPlayerVelocity = Vector3.ClampMagnitude(new Vector3(unitRb.velocity.x, 0, unitRb.velocity.z), maxSpeed);
-        clampedPlayerVelocity = new Vector3(clampedPlayerVelocity.x, unitRb.velocity.y, clampedPlayerVelocity.z);
-        unitRb.velocity = clampedPlayerVelocity;
+        _unitRb.AddForce(_moveDirection * (_speed * 20f), ForceMode.Force);
+        Vector3 clampedPlayerVelocity = Vector3.ClampMagnitude(new Vector3(_unitRb.velocity.x, 0, _unitRb.velocity.z), _maxSpeed);
+        clampedPlayerVelocity = new Vector3(clampedPlayerVelocity.x, _unitRb.velocity.y, clampedPlayerVelocity.z);
+        _unitRb.velocity = clampedPlayerVelocity;
 
         float targetAngle = Mathf.Atan2(_inputManager.RawMoveInput.x, _inputManager.RawMoveInput.y) * Mathf.Rad2Deg + _cameraMainTransform.eulerAngles.y;
         Quaternion targetRotation = Quaternion.Euler(transform.rotation.x, targetAngle, transform.rotation.z);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * _rotationSpeed);
     }
 
     private void OnJump()
     {
-        unitRb.velocity = new Vector3(unitRb.velocity.x, 0, unitRb.velocity.z);
-        unitRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        isJumping = false;
-        shouldAddFallSpeedMultiplier = true;
+        _unitRb.velocity = new Vector3(_unitRb.velocity.x, 0, _unitRb.velocity.z);
+        _unitRb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+        _isJumping = false;
+        _shouldAddFallSpeedMultiplier = true;
     }
 
     private IEnumerator JumpBuffer()
     {
-        isJumping = true;
+        _isJumping = true;
         yield return new WaitForSeconds(0.1f);
-        isJumping = false;
+        _isJumping = false;
     }
     private void GroundCheck()
     {
@@ -197,13 +197,13 @@ public class UnitController : MonoBehaviour
 
         if (_groundHits.Length > 0)
         {
-            isGrounded = true;
+            _isGrounded = true;
         }
         else
         {
-            isGrounded = false;
-            isOnSlope = false;
-            isOnSteepSlope = false;
+            _isGrounded = false;
+            _isOnSlope = false;
+            _isOnSteepSlope = false;
         }
 
         foreach (var hit in _groundHits)
@@ -212,24 +212,24 @@ public class UnitController : MonoBehaviour
             _groundHit = hit;
             if (Vector3.Angle(transform.TransformDirection(Vector3.up), hit.normal) == 0)
             {
-                isOnSlope = false;
-                isOnSteepSlope = false;
+                _isOnSlope = false;
+                _isOnSteepSlope = false;
                 break;
             }
 
-            if (Vector3.Angle(transform.TransformDirection(Vector3.up), hit.normal) < maxSlopeAngle)
+            if (Vector3.Angle(transform.TransformDirection(Vector3.up), hit.normal) < _maxSlopeAngle)
             {
-                isOnSlope = true;
-                isOnSteepSlope = false;
+                _isOnSlope = true;
+                _isOnSteepSlope = false;
             }
-            else if (Vector3.Angle(transform.TransformDirection(Vector3.up), hit.normal) > maxSlopeAngle)
+            else if (Vector3.Angle(transform.TransformDirection(Vector3.up), hit.normal) > _maxSlopeAngle)
             {
-                isOnSlope = false;
-                isOnSteepSlope = true;
+                _isOnSlope = false;
+                _isOnSteepSlope = true;
             }
         }
 
-        Debug.DrawRay(_groundHit.point, _groundHit.normal, Color.red, debugRayDuration, true);
+        Debug.DrawRay(_groundHit.point, _groundHit.normal, Color.red, _debugRayDuration, true);
     }
 
 }

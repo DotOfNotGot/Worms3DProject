@@ -5,7 +5,7 @@ using UnityEngine;
 public class BulletProjectile : ProjectileBase
 {
     private int _framesExisted = 0;
-    [SerializeField] private float bulletPushForce = 10f;
+    [SerializeField] private float _bulletPushForce = 10f;
 
     // Start is called before the first frame update
     private void FixedUpdate()
@@ -30,7 +30,7 @@ public class BulletProjectile : ProjectileBase
 
             currentCollider.attachedRigidbody.isKinematic = false;
             currentCollider.GetComponent<UnitController>().ResetGroundedTimer();
-            currentCollider.attachedRigidbody.AddForce(ProjectileRb.velocity.normalized * bulletPushForce);
+            currentCollider.attachedRigidbody.AddForce(ProjectileRb.velocity.normalized * _bulletPushForce);
         }
         Destroy(gameObject);
     }

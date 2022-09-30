@@ -128,9 +128,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ed18b4884ec8d14aa165c31286e12d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: Grenade
-  weaponSpawnPoint: {fileID: 1101992845134745330}
-  projectilePrefab: {fileID: 8983556676873831914, guid: 518fbd46370787a458af9aba7d0fd990,
+  _weaponName: Grenade
+  _projectileSpawnPoint: {fileID: 1101992845134745330}
+  _projectilePrefab: {fileID: 8983556676873831914, guid: 518fbd46370787a458af9aba7d0fd990,
     type: 3}
-  launchForce: 20
-  weaponUses: 1
+  _launchForce: 10
+  _weaponUses: 1

@@ -1078,6 +1078,11 @@ PrefabInstance:
       propertyPath: sceneCamera
       value: 
       objectReference: {fileID: 1796717769}
+    - target: {fileID: 2913024375757928085, guid: 2cfc8a8c93750794eaae3f228162d2ea,
+        type: 3}
+      propertyPath: _sceneCamera
+      value: 
+      objectReference: {fileID: 1796717769}
     - target: {fileID: 2913024375757928086, guid: 2cfc8a8c93750794eaae3f228162d2ea,
         type: 3}
       propertyPath: m_RootOrder

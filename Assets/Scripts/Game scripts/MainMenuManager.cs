@@ -8,61 +8,61 @@ using UnityEngine.UI;
 public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] 
-    private MatchInfo matchInfo;
+    private MatchInfo _matchInfo;
     
     [SerializeField]
-    private TMP_Dropdown teamsDropdown;
+    private TMP_Dropdown _teamsDropdown;
 
     [SerializeField] 
-    private TMP_Dropdown unitsDropdown;
+    private TMP_Dropdown _unitsDropdown;
 
     [SerializeField]
-    private TextMeshProUGUI timerUI;
+    private TextMeshProUGUI _timerUI;
     
     [SerializeField] 
-    private int amountOfTeams;
+    private int _amountOfTeams;
     [SerializeField] 
-    private int amountOfUnits;
+    private int _amountOfUnits;
     [SerializeField]
-    private float turnTimerLength = 90f;
+    private float _turnTimerLength = 90f;
     
     // Start is called before the first frame update
     void Start()
     {
-        matchInfo = MatchInfo.Instance;
-        timerUI.text = turnTimerLength.ToString();
+        _matchInfo = MatchInfo.Instance;
+        _timerUI.text = _turnTimerLength.ToString();
     }
     public void OnPlusPressed()
     {
-        if (turnTimerLength + 30 < 120)
+        if (_turnTimerLength + 30 < 120)
         {
-            turnTimerLength += 30f;
+            _turnTimerLength += 30f;
         }
         else
         {
-            turnTimerLength = 120f;
+            _turnTimerLength = 120f;
         }
-        timerUI.text = turnTimerLength.ToString();
+        _timerUI.text = _turnTimerLength.ToString();
     }
 
     public void OnMinusPressed()
     {
-        if (turnTimerLength - 30 >= 30)
+        if (_turnTimerLength - 30 >= 30)
         {
-            turnTimerLength -= 30f;
+            _turnTimerLength -= 30f;
         }
         else
         {
-            turnTimerLength = 30;
+            _turnTimerLength = 30;
         }
 
-        timerUI.text = turnTimerLength.ToString();
+        _timerUI.text = _turnTimerLength.ToString();
     }
     public void OnStartPressed()
     {
-        amountOfTeams = teamsDropdown.value + 2;
-        amountOfUnits = unitsDropdown.value + 1;
-        matchInfo.SetMatchInfo(amountOfTeams, amountOfUnits, turnTimerLength);
+        _amountOfTeams = _teamsDropdown.value + 2;
+        _amountOfUnits = _unitsDropdown.value + 1;
+        _matchInfo.SetMatchInfo(_amountOfTeams, _amountOfUnits, _turnTimerLength);
         SceneManager.LoadScene(1);
     }
 }

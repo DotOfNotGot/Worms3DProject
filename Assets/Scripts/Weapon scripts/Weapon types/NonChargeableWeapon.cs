@@ -5,7 +5,7 @@ using UnityEngine;
 public class NonChargeableWeapon : WeaponBase
 {
     [SerializeField]
-    private int amountOfBullets = 1;
+    private int _amountOfBullets = 1;
 
     private int _bulletsToShoot;
     
@@ -14,12 +14,12 @@ public class NonChargeableWeapon : WeaponBase
     private bool _shotInProgress;
 
     [SerializeField]
-    private float timeBetweenProjectiles = 0.1f;
+    private float _timeBetweenProjectiles = 0.1f;
 
 
     private void Start()
     {
-        _bulletsToShoot = amountOfBullets;
+        _bulletsToShoot = _amountOfBullets;
     }
 
     private void Update()
@@ -27,7 +27,6 @@ public class NonChargeableWeapon : WeaponBase
         if (CurrentInputManager.ShootAction.triggered && !_shouldShoot && !CurrentInputManager.GetComponent<UnitController>().HasShot)
         {
             _shouldShoot = true;
-            HandleWeaponUses();
         }
     }
 
@@ -43,7 +42,8 @@ public class NonChargeableWeapon : WeaponBase
         if (_bulletsToShoot == 0)
         {
             _shouldShoot = false;
-            _bulletsToShoot = amountOfBullets;
+            _bulletsToShoot = _amountOfBullets;
+            HandleWeaponUses();
         }
 
     }
@@ -53,7 +53,7 @@ public class NonChargeableWeapon : WeaponBase
         UseWeapon(1f);
         _shotInProgress = true;
 
-        yield return new WaitForSeconds(timeBetweenProjectiles);
+        yield return new WaitForSeconds(_timeBetweenProjectiles);
         _bulletsToShoot--;
         _shotInProgress = false;
     }

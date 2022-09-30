@@ -7,17 +7,17 @@ public class WeaponSelector : MonoBehaviour
     private PlayerInputManager _inputManager;
 
     [SerializeField]
-    private TMP_Dropdown weaponsUIList;
+    private TMP_Dropdown _weaponsUIList;
 
     [SerializeField]
-    private GameObject weaponSelectorObject;
+    private GameObject _weaponSelectorObject;
 
     private UnitsInputSetter _unitsInputSetter;
 
     [SerializeField]
-    private List<WeaponBase> weapons;
+    private List<WeaponBase> _weapons;
     [SerializeField]
-    private List<GameObject> weaponGOs;
+    private List<GameObject> _weaponGOs;
 
 
     private WeaponBase _currentWeapon;
@@ -28,19 +28,19 @@ public class WeaponSelector : MonoBehaviour
     {
         _unitsInputSetter = GetComponentInParent<UnitsInputSetter>();
         // Instantiates weapons list objects in every unit.
-        foreach (var weapon in weapons)
+        foreach (var weapon in _weapons)
         {
             if (weapon != null)
             {
                 var currentWeaponGameObject = Instantiate(weapon.gameObject, gameObject.transform);
-                weaponGOs.Add(currentWeaponGameObject);
+                _weaponGOs.Add(currentWeaponGameObject);
             }
             else
             {
                 var currentWeaponGameObject = new GameObject();
                 currentWeaponGameObject.transform.SetParent(gameObject.transform);
                 currentWeaponGameObject.transform.localPosition = Vector3.zero;
-                weaponGOs.Add(currentWeaponGameObject);
+                _weaponGOs.Add(currentWeaponGameObject);
             }
         }
         TurnWeaponsOff();
@@ -53,50 +53,50 @@ public class WeaponSelector : MonoBehaviour
         if (_inputManager.OpenWeaponSelectorAction.triggered)
         {
             _unitsInputSetter.DisableUnitInput(_inputManager);
-            weaponSelectorObject.SetActive(true);
+            _weaponSelectorObject.SetActive(true);
             Cursor.visible = true;
         }
     }
 
     public void SelectWeapon()
     {
-        foreach (var weapon in weaponGOs)
+        foreach (var weapon in _weaponGOs)
         {
             weapon.SetActive(false);
         }
         CancelWeaponSelect();
         Cursor.visible = false;
 
-        if (weaponsUIList.value != 0)
+        if (_weaponsUIList.value != 0)
         {
-            _currentWeaponGameObject = weaponGOs[weaponsUIList.value];
+            _currentWeaponGameObject = _weaponGOs[_weaponsUIList.value];
             _currentWeapon = _currentWeaponGameObject.GetComponent<WeaponBase>();
             _currentWeaponGameObject.SetActive(true);
         }
         else
         {
-            _currentWeapon = weapons[weaponsUIList.value];
+            _currentWeapon = _weapons[_weaponsUIList.value];
         }
         gameObject.GetComponentInParent<UnitController>().SetCurrentWeapon(_currentWeapon);
     }
 
     public void CancelWeaponSelect()
     {
-        weaponSelectorObject.SetActive(false);
+        _weaponSelectorObject.SetActive(false);
         Cursor.visible = false;
         _unitsInputSetter.EnableUnitInput(_inputManager);
     }
 
     public void DisableWeaponSelectorObject()
     {
-        weaponSelectorObject.SetActive(false);
+        _weaponSelectorObject.SetActive(false);
     }
 
     public void SetCurrentWeaponByIndex(int newWeaponIndex)
     {
-        if (weaponGOs.Count != 0)
+        if (_weaponGOs.Count != 0)
         {
-            _currentWeapon = weaponGOs[0].GetComponent<WeaponBase>();
+            _currentWeapon = _weaponGOs[0].GetComponent<WeaponBase>();
         }
     }
     
@@ -112,7 +112,7 @@ public class WeaponSelector : MonoBehaviour
 
     public void TurnWeaponsOff()
     {
-        foreach (var weapon in weaponGOs)
+        foreach (var weapon in _weaponGOs)
         {
             weapon.SetActive(false);
         }

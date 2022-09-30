@@ -12,10 +12,7 @@ public class Rocket : ExplosiveProjectile
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (FramesExisted > 2)
-        {
-            ExplosionCheck();
-        }
+        ExplosionCheck();
     }
 
 }
