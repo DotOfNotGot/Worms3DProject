@@ -133,3 +133,4 @@ MonoBehaviour:
   _explosionRadius: 5
   _explosionForce: 400
   _explosionUpwardsModifier: 5
+  _explosionParticles: {fileID: 0}

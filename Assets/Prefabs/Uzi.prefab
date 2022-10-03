@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _weaponName: Uzi
+  _weaponSound: {fileID: 8300000, guid: dba70843608495c41b91695e567e0067, type: 3}
   _projectileSpawnPoint: {fileID: 8755481009984572052}
   _projectilePrefab: {fileID: 4431833837728474444, guid: 0a68b4e1c3e24f94d86537fa5051980a,
     type: 3}

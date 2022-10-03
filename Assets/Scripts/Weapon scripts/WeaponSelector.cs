@@ -6,6 +6,9 @@ public class WeaponSelector : MonoBehaviour
 {
     private PlayerInputManager _inputManager;
 
+    private AudioSource _audioSource;
+
+
     [SerializeField]
     private TMP_Dropdown _weaponsUIList;
 
@@ -26,6 +29,7 @@ public class WeaponSelector : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
         _unitsInputSetter = GetComponentInParent<UnitsInputSetter>();
         // Instantiates weapons list objects in every unit.
         foreach (var weapon in _weapons)
@@ -55,6 +59,16 @@ public class WeaponSelector : MonoBehaviour
             _unitsInputSetter.DisableUnitInput(_inputManager);
             _weaponSelectorObject.SetActive(true);
             Cursor.visible = true;
+        }
+    }
+
+
+    public void PlayWeaponSound(AudioClip weaponSound)
+    {
+        _audioSource.clip = weaponSound;
+        if (!_audioSource.isPlaying)
+        {
+            _audioSource.Play();
         }
     }
 

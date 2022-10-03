@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _weaponName: Bazooka
+  _weaponSound: {fileID: 8300000, guid: e5849ca078fc6f04c8e2f31d06583a88, type: 3}
   _projectileSpawnPoint: {fileID: 6725060115144910675}
   _projectilePrefab: {fileID: 9093934692171033021, guid: 637e24a109918ae40a68085f6782988e,
     type: 3}

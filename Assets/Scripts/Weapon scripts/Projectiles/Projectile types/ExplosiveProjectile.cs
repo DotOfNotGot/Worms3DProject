@@ -11,15 +11,13 @@ public class ExplosiveProjectile : ProjectileBase
     [SerializeField]
     private float _explosionUpwardsModifier = 1f;
 
+
     protected int FramesExisted { get; private set; } = 0;
-
-    private bool _explosionCheckDone = false;
-
 
     private void FixedUpdate()
     {
         FramesExisted += 1;
-        if (FramesExisted > MaxFramesAlive)
+        if (FramesExisted > MaxFramesAlive || _hasCollided)
         {
             ExplosionCheck();
         }
@@ -27,10 +25,9 @@ public class ExplosiveProjectile : ProjectileBase
 
     protected void ExplosionCheck()
     {
-        if (_explosionCheckDone) return;
-        _explosionCheckDone = true;
 
         var colliders = new List<Collider>(Physics.OverlapSphere(transform.position, _explosionRadius));
+
 
         foreach (var currentCollider in colliders)
         {
@@ -39,16 +36,16 @@ public class ExplosiveProjectile : ProjectileBase
                 float distanceAdjustedDamage = Mathf.Sin((_explosionRadius - Vector3.Distance(currentCollider.transform.position, transform.position)) / _explosionRadius) * (Mathf.PI / 2) * ProjectileDamage;
                 currentCollider.GetComponent<UnitInformation>().StoreDamage(Mathf.Clamp(distanceAdjustedDamage, 0f, ProjectileDamage));
 
-                currentCollider.attachedRigidbody.isKinematic = false;
                 currentCollider.GetComponent<UnitController>().ResetGroundedTimer();
+                currentCollider.attachedRigidbody.isKinematic = false;
             }
 
             if (currentCollider.GetComponent<Rigidbody>() != null)
             {
-                
                 currentCollider.attachedRigidbody.AddExplosionForce(_explosionForce * currentCollider.attachedRigidbody.mass, transform.position, _explosionRadius, _explosionUpwardsModifier);
             }
         }
+        _particleManager.PlayParticle("Explosion", transform.position);
         Destroy(gameObject);
     }
 

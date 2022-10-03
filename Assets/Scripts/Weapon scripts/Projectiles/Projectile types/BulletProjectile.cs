@@ -15,23 +15,29 @@ public class BulletProjectile : ProjectileBase
         {
             Destroy(gameObject);
         }
+
+        if (_hasCollided)
+        {
+            HandleProjectileCollision();
+        }
+
     }
 
-
-    private void OnCollisionEnter(Collision collision)
+    private void HandleProjectileCollision()
     {
-        var currentCollider = collision.collider;
+        if (_currentCollider == null || _currentCollider.CompareTag("Projectile")) return;
 
-        if (currentCollider.CompareTag("Projectile")) return;
 
-        if (currentCollider.CompareTag("Player"))
+
+        if (_currentCollider.CompareTag("Player"))
         {
-            currentCollider.GetComponent<UnitInformation>().StoreDamage(ProjectileDamage);
+            _currentCollider.GetComponent<UnitInformation>().StoreDamage(ProjectileDamage);
 
-            currentCollider.attachedRigidbody.isKinematic = false;
-            currentCollider.GetComponent<UnitController>().ResetGroundedTimer();
-            currentCollider.attachedRigidbody.AddForce(ProjectileRb.velocity.normalized * _bulletPushForce);
+            _currentCollider.GetComponent<UnitController>().ResetGroundedTimer();
+            _currentCollider.attachedRigidbody.isKinematic = false;
+            _currentCollider.attachedRigidbody.AddForce(ProjectileRb.velocity.normalized * _bulletPushForce);
         }
+        _particleManager.PlayParticle("BulletImpact", transform.position);
         Destroy(gameObject);
     }
 }

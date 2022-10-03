@@ -7,6 +7,10 @@ public class WeaponBase : MonoBehaviour
     [SerializeField]
     private string _weaponName;
 
+
+    [SerializeField]
+    private AudioClip _weaponSound;
+
     [SerializeField] 
     private Transform _projectileSpawnPoint;
     
@@ -19,6 +23,8 @@ public class WeaponBase : MonoBehaviour
 
     [SerializeField]
     private int _weaponUses = 1;
+
+
     
     private void Awake()
     {
@@ -26,7 +32,7 @@ public class WeaponBase : MonoBehaviour
     }
     protected void UseWeapon(float modifier)
     {
-        
+        GetComponentInParent<WeaponSelector>().PlayWeaponSound(_weaponSound);
         var currentProjectile = Instantiate(_projectilePrefab, _projectileSpawnPoint.position, transform.rotation);
         currentProjectile.GetComponent<ProjectileBase>().LaunchProjectile(_launchForce * modifier);
     }

@@ -175,12 +175,6 @@ public class CameraHandler : MonoBehaviour
         }
     }
 
-    private IEnumerator SetReadyForRoundTrue()
-    {
-        yield return new WaitForSeconds(3f);
-        _readyForRound = true;
-    }
-
     public void SetReadyForRoundFalse()
     {
         _readyForRound = false;
