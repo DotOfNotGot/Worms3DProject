@@ -12,12 +12,12 @@ public class ExplosiveProjectile : ProjectileBase
     private float _explosionUpwardsModifier = 1f;
 
 
-    protected int FramesExisted { get; private set; } = 0;
+    private int _framesExisted = 0;
 
     private void FixedUpdate()
     {
-        FramesExisted += 1;
-        if (FramesExisted > MaxFramesAlive || _hasCollided)
+        _framesExisted += 1;
+        if (_framesExisted > MaxFramesAlive)
         {
             ExplosionCheck();
         }
@@ -25,9 +25,7 @@ public class ExplosiveProjectile : ProjectileBase
 
     protected void ExplosionCheck()
     {
-
         var colliders = new List<Collider>(Physics.OverlapSphere(transform.position, _explosionRadius));
-
 
         foreach (var currentCollider in colliders)
         {
@@ -46,7 +44,8 @@ public class ExplosiveProjectile : ProjectileBase
             }
         }
         _particleManager.PlayParticle("Explosion", transform.position);
-        Destroy(gameObject);
+        _framesExisted = 0;
+        _projectilePool.ReleaseWeaponProjectile(_weaponShotFromName, gameObject);
     }
 
 #if UNITY_EDITOR

@@ -16,11 +16,10 @@ public class ProjectileBase : MonoBehaviour
     [SerializeField]
     private string _projectileSoundKey;
 
-    protected bool _hasCollided;
-
-    protected Collider _currentCollider;
-
     protected ParticleManager _particleManager;
+    protected ProjectilePool _projectilePool;
+
+    protected string _weaponShotFromName;
 
     protected float ProjectileDamage { get => _projectileDamage; }
     protected Rigidbody ProjectileRb { get => _projectileRb; }
@@ -31,6 +30,7 @@ public class ProjectileBase : MonoBehaviour
     private void Awake()
     {
         _particleManager = FindObjectOfType<ParticleManager>();
+        _projectilePool = FindObjectOfType<ProjectilePool>();
     }
 
     public void LaunchProjectile(float newLaunchForce)
@@ -38,10 +38,8 @@ public class ProjectileBase : MonoBehaviour
         _projectileRb.velocity = transform.up * newLaunchForce;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void GetWeaponName(string weaponName)
     {
-        _hasCollided = true;
-        _currentCollider = collision.collider;
+        _weaponShotFromName = weaponName;
     }
-
 }

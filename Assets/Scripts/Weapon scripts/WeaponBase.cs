@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class WeaponBase : MonoBehaviour
 {
@@ -23,18 +24,23 @@ public class WeaponBase : MonoBehaviour
 
     [SerializeField]
     private int _weaponUses = 1;
-
-
     
+    private ProjectilePool _projectilePool;
+
+
     private void Awake()
     {
+        _projectilePool = FindObjectOfType<ProjectilePool>();
+        _projectilePool.AddWeaponToDict(_weaponName, _projectilePrefab);
         SetInputManager();
     }
     protected void UseWeapon(float modifier)
     {
         GetComponentInParent<WeaponSelector>().PlayWeaponSound(_weaponSound);
-        var currentProjectile = Instantiate(_projectilePrefab, _projectileSpawnPoint.position, transform.rotation);
-        currentProjectile.GetComponent<ProjectileBase>().LaunchProjectile(_launchForce * modifier);
+        var currentProjectile = _projectilePool.GetWeaponProjectile(_weaponName, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);
+        var currentProjectileBase = currentProjectile.GetComponent<ProjectileBase>();
+        currentProjectileBase.GetWeaponName(_weaponName);
+        currentProjectileBase.LaunchProjectile(_launchForce * modifier);
     }
 
     protected void HandleWeaponUses()

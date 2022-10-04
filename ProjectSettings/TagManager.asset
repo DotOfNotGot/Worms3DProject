@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Destroyable
+  - Projectile
   layers:
   - Default
   - TransparentFX

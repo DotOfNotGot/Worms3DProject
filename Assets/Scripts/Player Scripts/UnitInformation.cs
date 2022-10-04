@@ -20,7 +20,6 @@ public class UnitInformation : MonoBehaviour
     private int _storedHp = 0;
 
     public int TeamIndex { get => _teamIndex; }
-    public int StoredHp { get => _storedHp; }
     public int StoredDamage { get => _storedDamage; }
 
 
@@ -57,8 +56,6 @@ public class UnitInformation : MonoBehaviour
 
     public void TakeDamage()
     {
-        // TODO: Make the hp tick down slower ish.
-
         if (_storedDamage == 0) return;
 
         if (_storedHp == 0)

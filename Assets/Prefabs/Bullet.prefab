@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 4431833837728474444}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 99.797104, y: 7.53, z: 11.655844}
-  m_LocalScale: {x: 0.1, y: 0.3, z: 0.1}
+  m_LocalScale: {x: 0.05, y: 0.1, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -113,7 +113,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _projectileRb: {fileID: 4431833837728474445}
   _projectileDamage: 1
-  _maxFramesAlive: 200
+  _maxFramesAlive: 10
+  _projectileSoundKey: 
   _bulletPushForce: 10
 --- !u!54 &4431833837728474445
 Rigidbody:
@@ -130,4 +131,4 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2

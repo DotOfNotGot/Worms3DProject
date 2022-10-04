@@ -52,7 +52,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -4893,6 +4893,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87be20f8fbb91dc4aa1f4f0ef7228c98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _objectKey: BulletImpact
 --- !u!82 &3012577757764047638
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4905,7 +4906,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -7813808769769666503, guid: 8d27dd1101afa384da4176b2f22f041f,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 77e597aa4328d614b85f696e1161d664, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

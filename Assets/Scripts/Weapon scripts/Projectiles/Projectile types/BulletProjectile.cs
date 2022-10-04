@@ -13,31 +13,30 @@ public class BulletProjectile : ProjectileBase
         _framesExisted += 1;
         if (_framesExisted > MaxFramesAlive)
         {
-            Destroy(gameObject);
-        }
-
-        if (_hasCollided)
-        {
-            HandleProjectileCollision();
+            _framesExisted = 0;
+            _projectilePool.ReleaseWeaponProjectile(_weaponShotFromName, gameObject);
         }
 
     }
 
-    private void HandleProjectileCollision()
+    private void OnCollisionEnter(Collision collision)
     {
-        if (_currentCollider == null || _currentCollider.CompareTag("Projectile")) return;
+        var currentCollider = collision.collider;
+        Debug.Log(collision.collider, collision.collider);
+        if (currentCollider == null || currentCollider.CompareTag("Projectile")) return;
 
-
-
-        if (_currentCollider.CompareTag("Player"))
+        if (currentCollider.CompareTag("Player"))
         {
-            _currentCollider.GetComponent<UnitInformation>().StoreDamage(ProjectileDamage);
+            currentCollider.GetComponent<UnitInformation>().StoreDamage(ProjectileDamage);
 
-            _currentCollider.GetComponent<UnitController>().ResetGroundedTimer();
-            _currentCollider.attachedRigidbody.isKinematic = false;
-            _currentCollider.attachedRigidbody.AddForce(ProjectileRb.velocity.normalized * _bulletPushForce);
+            currentCollider.GetComponent<UnitController>().ResetGroundedTimer();
+            currentCollider.attachedRigidbody.isKinematic = false;
+            currentCollider.attachedRigidbody.AddForce(ProjectileRb.velocity.normalized * _bulletPushForce);
         }
+
         _particleManager.PlayParticle("BulletImpact", transform.position);
-        Destroy(gameObject);
+        _framesExisted = 0;
+        _projectilePool.ReleaseWeaponProjectile(_weaponShotFromName, gameObject);
     }
+
 }

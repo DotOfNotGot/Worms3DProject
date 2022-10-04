@@ -61,8 +61,6 @@ public class CameraHandler : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        // TODO: Fix lerp+freeze between turns. Have it not at game start.
-
 
         UpdateFocusPoint();
 

@@ -178,7 +178,8 @@ public class GameManager : MonoBehaviour
         CheckForDeadUnits();
         _shouldSwitchState = SetUnitsHp();
     }
-
+    
+    // Sets units hp according to damage. If it returns true it switches state to between turns.
     private bool SetUnitsHp()
     {
         if (_damagedUnits.Count == 0) return true;
@@ -203,7 +204,8 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         currentUnitInfo.TakeDamage();
     }
-
+    
+    // Checks all damaged units for dead units and adds them to a list of dead units.
     private void CheckForDeadUnits()
     {
         foreach (var damagedUnit in _damagedUnits)
@@ -215,7 +217,8 @@ public class GameManager : MonoBehaviour
             _deadUnits.Add(damagedUnit);
         }
     }
-
+    
+    // Disables all units GUI at the end of turn.
     private void DisableUnitsGUI()
     {
         foreach (var team in _aliveTeams)
@@ -231,13 +234,14 @@ public class GameManager : MonoBehaviour
     {
         _shouldSwitchState = HandleDeadUnits();
         if (!_shouldSwitchState) return;
-
+        
+        // Checks if a team has won or if there was a draw. Returns from method if game is over.
         if (_aliveTeams.Count <= 1)
         {
             _gameEnded = true;
             return;
         }
-
+        
         HandleTurnAndUnitIndex();
         
         _turnTimer.ResetTurnTimer();
@@ -290,8 +294,10 @@ public class GameManager : MonoBehaviour
             _currentTurnIndex = 0;
         }
 
-        if (_currentTurnIndex != 0 && _aliveTeams[_currentTurnIndex].AliveUnits.Count != 1) return;
+        if (_currentTurnIndex != 0) return;
             
+        int storedUnitIndex = _currentUnitIndex;
+        
         if (_currentUnitIndex + 1 < _aliveTeams[_currentTurnIndex].AliveUnits.Count)
         { 
             _currentUnitIndex += 1;

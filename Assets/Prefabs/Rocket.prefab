@@ -131,7 +131,7 @@ MonoBehaviour:
   _projectileRb: {fileID: 7327354425865910949}
   _projectileDamage: 45
   _maxFramesAlive: 200
+  _projectileSoundKey: 
   _explosionRadius: 5
   _explosionForce: 600
   _explosionUpwardsModifier: 1.1
-  _explosionParticles: {fileID: 0}
