@@ -37,7 +37,7 @@ public class UnitInformation : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _unitMaterial = GetComponent<Renderer>().material;
+        _unitMaterial = GetComponent<Renderer>().materials[0];
         _uiHandler = GetComponentInChildren<UnitUIHandler>();
         SetUnitColor();
     }
@@ -100,16 +100,16 @@ public class UnitInformation : MonoBehaviour
         switch (_teamIndex)
         {
             case 0:
-                color = Color.red;
+                color = new Color32(201, 54, 64, 255);
                 break;
             case 1:
-                color = Color.blue;
+                color = new Color32(66, 135, 245, 255);
                 break;
             case 2:
-                color = Color.green;
+                color = new Color32(153, 229, 80, 255);
                 break;
             case 3:
-                color = Color.yellow;
+                color = new Color32(241, 247, 52, 255);
                 break;
         }
         _unitMaterial.color = color;

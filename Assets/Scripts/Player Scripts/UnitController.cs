@@ -29,6 +29,10 @@ public class UnitController : MonoBehaviour
     [SerializeField]
     private float _maxSlopeAngle = 40f;
     [SerializeField]
+    private float _maxGroundAngle = 70f;
+    [SerializeField]
+    private float _maxSnapSpeed = 100f;
+    [SerializeField]
     private float _fallMultiplier = 2.5f;
     [SerializeField]
     private float _groundDrag = 1f;
@@ -53,6 +57,8 @@ public class UnitController : MonoBehaviour
     
     [SerializeField]
     private int _framesGrounded;
+    private int _stepsSinceLastGrounded;
+    private int _stepsSinceLastJumped;
     
     public bool IsGrounded { get => _isGrounded; }
     public bool HasShot { get => _hasShot; }
@@ -102,15 +108,16 @@ public class UnitController : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         HandleWeapon();
 
-        if (_isGrounded)
+        if (_isGrounded || SnapToGround())
         {
+            _stepsSinceLastGrounded = 0;
             _framesGrounded++;
         }
         else
         {
+            _stepsSinceLastGrounded++;
             _framesGrounded = 0;
         }
         GroundCheck();
@@ -124,6 +131,7 @@ public class UnitController : MonoBehaviour
         {
             OnJump();
         }
+        _stepsSinceLastJumped++;
 
         if (_unitRb.velocity.y < 0 && !_isGrounded && _shouldAddFallSpeedMultiplier)
         {
@@ -167,18 +175,87 @@ public class UnitController : MonoBehaviour
 
     private void OnMove()
     {
-        _unitRb.AddForce(_moveDirection * (_speed * 20f), ForceMode.Force);
-        Vector3 clampedPlayerVelocity = Vector3.ClampMagnitude(new Vector3(_unitRb.velocity.x, 0, _unitRb.velocity.z), _maxSpeed);
-        clampedPlayerVelocity = new Vector3(clampedPlayerVelocity.x, _unitRb.velocity.y, clampedPlayerVelocity.z);
-        _unitRb.velocity = clampedPlayerVelocity;
 
-        float targetAngle = Mathf.Atan2(_inputManager.RawMoveInput.x, _inputManager.RawMoveInput.y) * Mathf.Rad2Deg + _cameraMainTransform.eulerAngles.y;
-        Quaternion targetRotation = Quaternion.Euler(transform.rotation.x, targetAngle, transform.rotation.z);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * _rotationSpeed);
+        if (!_isOnSlope)
+        {
+            _unitRb.AddForce(_moveDirection * (_speed * 20f), ForceMode.Force);
+            Vector3 clampedPlayerVelocity = Vector3.ClampMagnitude(new Vector3(_unitRb.velocity.x, 0, _unitRb.velocity.z), _maxSpeed);
+            clampedPlayerVelocity = new Vector3(clampedPlayerVelocity.x, _unitRb.velocity.y, clampedPlayerVelocity.z);
+            _unitRb.velocity = clampedPlayerVelocity;
+
+            float targetAngle = Mathf.Atan2(_inputManager.RawMoveInput.x, _inputManager.RawMoveInput.y) * Mathf.Rad2Deg + _cameraMainTransform.eulerAngles.y;
+            Quaternion targetRotation = Quaternion.Euler(transform.rotation.x, targetAngle, transform.rotation.z);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * _rotationSpeed);
+        }
+        else
+        {
+            _unitRb.AddForce(GetSlopeMoveDirection(_isOnSteepSlope) * _speed * 20f, ForceMode.Force);
+
+            //_unitRb.velocity = _unitRb.velocity - (-_groundHit.normal.normalized * Physics.gravity.y);
+            Vector3 clampedPlayerVelocity = Vector3.ClampMagnitude(new Vector3(_unitRb.velocity.x, 0, _unitRb.velocity.z), _maxSpeed);
+            clampedPlayerVelocity = new Vector3(clampedPlayerVelocity.x, _unitRb.velocity.y, clampedPlayerVelocity.z);
+            _unitRb.velocity = clampedPlayerVelocity;
+
+            float targetAngle = Mathf.Atan2(_inputManager.RawMoveInput.x, _inputManager.RawMoveInput.y) * Mathf.Rad2Deg + _cameraMainTransform.eulerAngles.y;
+            Quaternion targetRotation = Quaternion.Euler(transform.rotation.x, targetAngle, transform.rotation.z);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * _rotationSpeed);
+        }
+        
+    }
+
+    private bool SnapToGround()
+    {
+        if (_stepsSinceLastGrounded > 1 || _stepsSinceLastJumped < 10)
+        {
+            return false;
+        }
+
+
+        float speed = _unitRb.velocity.magnitude;
+        if (speed > _maxSnapSpeed)
+        {
+            return false;
+        }
+
+        if (!Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 3f))
+        {
+            return false;
+        }
+        Debug.DrawRay(hit.point, hit.normal, Color.green, _debugRayDuration, true);
+
+
+
+        if (hit.normal.y > _maxGroundAngle)
+        {
+            return false;
+        }
+
+        _groundHit.normal = hit.normal;
+        float dot = Vector3.Dot(_unitRb.velocity, hit.normal);
+        if (dot > 0)
+        {
+            _unitRb.velocity = (_unitRb.velocity - hit.normal * dot).normalized * speed;
+        }
+        return true;
+    }
+
+    private Vector3 GetSlopeMoveDirection(bool isSteepSlope)
+    {
+
+        if (isSteepSlope)
+        {
+            return Vector3.ProjectOnPlane(Vector3.down, _groundHit.normal).normalized;
+        }
+        else
+        {
+            return Vector3.ProjectOnPlane(_moveDirection, _groundHit.normal).normalized;
+
+        }
     }
 
     private void OnJump()
     {
+        _stepsSinceLastJumped = 0;
         _unitRb.velocity = new Vector3(_unitRb.velocity.x, 0, _unitRb.velocity.z);
         _unitRb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
         _isJumping = false;
@@ -230,6 +307,20 @@ public class UnitController : MonoBehaviour
         }
 
         Debug.DrawRay(_groundHit.point, _groundHit.normal, Color.red, _debugRayDuration, true);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("GravityPad"))
+        {
+            other.GetComponent<GravityPad>().ApplyForce(_unitRb);
+        }
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Ray gizmoRay = new(transform.position, Vector3.down);
+        Gizmos.DrawRay(gizmoRay);
     }
 
 }

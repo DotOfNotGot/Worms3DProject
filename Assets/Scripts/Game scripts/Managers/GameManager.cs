@@ -427,7 +427,7 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < amountOfUnits; i++)
             {
                 var currentUnit = Instantiate(_playerPrefab, currentTeam.transform);
-                currentUnit.transform.localPosition += new Vector3(i * 3f, 0, j * 3f);
+                currentUnit.transform.position += new Vector3(i * 3f, 5, j * 3f);
                 _teams[j].SetUnitsArray(currentUnit.gameObject, i);
             }
             _teams[j].SetAliveUnitsList();
