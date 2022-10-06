@@ -40,6 +40,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField, Range(0, 3)] private int _currentTurnIndex = 0, _currentUnitIndex = 0;
 
+    [SerializeField]
+    private Transform[] _teamSpawnPositions;
+
     private bool _deadUnitTargetInProgress;
 
     private bool _shouldSwitchState = true;
@@ -254,7 +257,7 @@ public class GameManager : MonoBehaviour
             return true;
         }
 
-        if (!_deadUnitTargetInProgress)
+        if (_deadUnits.Count != 0 && !_deadUnitTargetInProgress)
         {
             StartCoroutine(HandleDeadUnitsTarget());
         }
@@ -285,7 +288,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleTurnAndUnitIndex()
     {
-        if (_currentTurnIndex + 1 != _aliveTeams.Count)
+        if (_currentTurnIndex + 1 < _aliveTeams.Count)
         {
             _currentTurnIndex += 1;
         }
@@ -294,7 +297,7 @@ public class GameManager : MonoBehaviour
             _currentTurnIndex = 0;
         }
 
-        if (_currentTurnIndex != 0) return;
+        if (_currentTurnIndex != 0 || _aliveTeams[_currentTurnIndex].AliveUnits.Count >= _currentUnitIndex) return;
             
         int storedUnitIndex = _currentUnitIndex;
         
@@ -427,7 +430,14 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < amountOfUnits; i++)
             {
                 var currentUnit = Instantiate(_playerPrefab, currentTeam.transform);
-                currentUnit.transform.position += new Vector3(i * 3f, 5, j * 3f);
+                if (_teamSpawnPositions.Length > 0)
+                {
+                    currentUnit.transform.position = _teamSpawnPositions[j].position + new Vector3(i * 2f, 0, 0);
+                }
+                else
+                {
+                    currentUnit.transform.position += new Vector3(i * 3f, 5, j * 3f);
+                }
                 _teams[j].SetUnitsArray(currentUnit.gameObject, i);
             }
             _teams[j].SetAliveUnitsList();

@@ -198,9 +198,4 @@ public class CameraHandler : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(_thisCamera.transform.position, _hit.point);
-    }
 }

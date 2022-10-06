@@ -122,7 +122,7 @@ public class UnitController : MonoBehaviour
         }
         GroundCheck();
 
-        if (_isGrounded && _moveDirection != Vector3.zero)
+        if ((_isGrounded || _stepsSinceLastGrounded < 500) && _moveDirection != Vector3.zero)
         {
             OnMove();
         }
@@ -313,6 +313,7 @@ public class UnitController : MonoBehaviour
     {
         if (other.CompareTag("GravityPad"))
         {
+            _stepsSinceLastJumped = 0;
             other.GetComponent<GravityPad>().ApplyForce(_unitRb);
         }
     }
