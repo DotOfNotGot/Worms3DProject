@@ -309,12 +309,11 @@ public class UnitController : MonoBehaviour
         Debug.DrawRay(_groundHit.point, _groundHit.normal, Color.red, _debugRayDuration, true);
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("GravityPad"))
+        if (other.CompareTag("Water"))
         {
-            _stepsSinceLastJumped = 0;
-            other.GetComponent<GravityPad>().ApplyForce(_unitRb);
+            GetComponent<UnitInformation>().StoreDamage(100);
         }
     }
     private void OnDrawGizmos()

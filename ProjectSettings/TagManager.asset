@@ -7,6 +7,7 @@ TagManager:
   - Destroyable
   - Projectile
   - GravityPad
+  - Water
   layers:
   - Default
   - TransparentFX
