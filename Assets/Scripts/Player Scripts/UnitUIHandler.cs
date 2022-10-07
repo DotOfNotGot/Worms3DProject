@@ -25,13 +25,18 @@ public class UnitUIHandler : MonoBehaviour
         _playerInfoCanvas.transform.rotation = Quaternion.LookRotation(_cameraTransform.forward, gameObject.transform.parent.up);
     }
 
-    public void SetPlayerInfoDisplay(int newHp)
+    public void SetUnitInfoDisplay(int newHp)
     {
         if (newHp < 0)
         {
             newHp = 0;
         }
         _unitHPDisplay.text = newHp.ToString();
+    }
+
+    public void DisableUnitInfoDisplay()
+    {
+        _unitHPDisplay.enabled = false;
     }
 
 }

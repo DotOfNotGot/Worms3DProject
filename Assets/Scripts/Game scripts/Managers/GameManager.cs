@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
     [SerializeField, Range(0, 3)] 
     private int _currentTurnIndex = 0, _currentUnitIndex = 0;
     private int _unitIndexToUse = 0;
+    private int _previousTurnAliveTeamsCount;
 
     private GameObject _currentTeamCurrentUnitGo;
 
@@ -192,6 +193,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleTurnEnd()
     {
+        _previousTurnAliveTeamsCount = _aliveTeams.Count;
         _hasSetTurnTimer = false;
         _currentTeamCurrentUnitGo.GetComponent<UnitController>().SetHasShot(false);
         DisableUnitsInput();
@@ -317,8 +319,14 @@ public class GameManager : MonoBehaviour
             _currentUnitIndex = biggestUnitIndex;
         }
 
+        if (_currentTurnIndex + 1 < _previousTurnAliveTeamsCount && _previousTurnAliveTeamsCount != _aliveTeams.Count)
+        {
+            // Checks if the amount of teams alive has changed, if yes and the currentTurnIndex + 1 isn't greater than the old count don't change the index.
+            // (Setting it to _aliveTeams.Count - 1 in this context is basically the same as leaving it as is. Empty if statements are just weird looking.
+            _currentTurnIndex = _aliveTeams.Count - 1;
+        }
         // Checks if turn index + 1 is bigger than teams alive. If it is then go to next round and set the counterbool to true.
-        if (_currentTurnIndex + 1 < _aliveTeams.Count)
+        else if (_currentTurnIndex + 1 < _aliveTeams.Count)
         {
             _currentTurnIndex += 1;
         }
@@ -328,11 +336,11 @@ public class GameManager : MonoBehaviour
             _roundCounter++;
             roundCounterIncreased = true;
             // Raises the lava plane based on the amount of rounds that have been played.
-            if (_roundCounter < 11)
+            if (_roundCounter < 21)
             {
                 _lavaPlane.transform.localPosition = Vector3.Lerp(_lavaPlane.transform.localPosition,
-                new Vector3(_lavaPlane.transform.localPosition.x, 41, _lavaPlane.transform.localPosition.z),
-                _roundCounter / 10f);
+                new Vector3(_lavaPlane.transform.localPosition.x, 45, _lavaPlane.transform.localPosition.z),
+                _roundCounter / 20f);
             }
         }
 
@@ -523,5 +531,6 @@ public class GameManager : MonoBehaviour
             }
             _teams[j].SetAliveUnitsList();
         }
+        _previousTurnAliveTeamsCount = _aliveTeams.Count;
     }
 }

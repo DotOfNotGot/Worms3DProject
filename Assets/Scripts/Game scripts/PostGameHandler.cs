@@ -28,6 +28,7 @@ public class PostGameHandler : MonoBehaviour
     void Awake()
     {
         GetPostMatchInfo();
+        Cursor.visible = true;
         _winText = GetComponentInChildren<TMP_Text>();
     }
 
@@ -43,6 +44,8 @@ public class PostGameHandler : MonoBehaviour
             _winText.text = $"Team {_winningTeamUnits[0].GetComponent<UnitInformation>().TeamIndex + 1} won!";
             for (int i = 0; i < _winningTeamUnits.Count; i++)
             {
+                _winningTeamUnits[i].SetActive(true);
+                _winningTeamUnits[i].GetComponentInChildren<UnitUIHandler>().DisableUnitInfoDisplay();
                 _winningTeamUnits[i].transform.SetParent(_podiumTransforms[i]);
                 _winningTeamUnits[i].transform.rotation = _podiumTransforms[i].transform.rotation;
                 _winningTeamUnits[i].transform.localPosition = new Vector3(0, 0, 0);

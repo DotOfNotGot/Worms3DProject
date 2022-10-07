@@ -64,7 +64,7 @@ public class UnitInformation : MonoBehaviour
         if (_hp > _storedHp - _storedDamage && _hp >= 0)
         {
             _hp--;
-            _uiHandler.SetPlayerInfoDisplay(_hp);
+            _uiHandler.SetUnitInfoDisplay(_hp);
             return;
         }
 
@@ -85,13 +85,7 @@ public class UnitInformation : MonoBehaviour
         _isDead = true;
     }
 
-    public void Heal(int healAmount)
-    {
-        _hp += healAmount;
-    }
-
     // Uses team index to set the color of the unit.
-    // At some point going to make it change something visually as well as color because colorblind people exist.
     private void SetUnitColor()
     {
         var color = Color.white;
@@ -104,10 +98,10 @@ public class UnitInformation : MonoBehaviour
                 color = new Color32(66, 135, 245, 255);
                 break;
             case 2:
-                color = new Color32(153, 229, 80, 255);
+                color = new Color32(200, 200, 80, 255);
                 break;
             case 3:
-                color = new Color32(241, 247, 52, 255);
+                color = new Color32(55, 255, 52, 255);
                 break;
                 default: color = new Color32(255,255,255,255);
                 break;

@@ -55,10 +55,11 @@ public class ChargeableWeapon : WeaponBase
 
         if (!_shouldShoot && !(_launchForceModifier >= 5f)) return;
 
-        HandleWeaponUses();
+
         _launchForceModifier /= 5f;
         _shouldShoot = false;
         _chargeLaunchForce = false;
+        HandleWeaponUses();
         UseWeapon(_launchForceModifier);
     }
 }

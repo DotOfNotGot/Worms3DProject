@@ -16,7 +16,6 @@ public class NonChargeableWeapon : WeaponBase
     [SerializeField]
     private float _timeBetweenProjectiles = 0.1f;
 
-
     private void Start()
     {
         _bulletsToShoot = _amountOfBullets;
