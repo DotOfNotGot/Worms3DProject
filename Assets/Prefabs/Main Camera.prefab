@@ -131,17 +131,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b32a804b37acc6743bebb532b3f8eb56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentInputManager: {fileID: 0}
-  gameManager: {fileID: 0}
-  focus: {fileID: 0}
-  distance: 5
-  focusRadius: 1
-  focusCentering: 0.5
-  allignDelay: 5
-  rotationSpeed: 20
-  minVerticalAngle: -30
-  maxVerticalAngle: 60
-  obstructionMask:
+  _currentInputManager: {fileID: 0}
+  _target: {fileID: 0}
+  _distance: 5
+  _focusRadius: 1
+  _focusCentering: 0.5
+  _allignDelay: 5
+  _rotationSpeed: 20
+  _minVerticalAngle: -30
+  _maxVerticalAngle: 60
+  _obstructionMask:
     serializedVersion: 2
     m_Bits: 55
-  thisCamera: {fileID: 6262861839854065857}
+  _thisCamera: {fileID: 0}

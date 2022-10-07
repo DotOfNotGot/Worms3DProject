@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Destroyable
+  - Projectile
+  - GravityPad
+  - Water
   layers:
   - Default
   - TransparentFX

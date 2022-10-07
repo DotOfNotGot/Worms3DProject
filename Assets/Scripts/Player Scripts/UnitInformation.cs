@@ -5,26 +5,23 @@ using UnityEngine;
 public class UnitInformation : MonoBehaviour
 {
 
-    [SerializeField, Range(0, 3)]
-    private int teamIndex;
+    private int _teamIndex;
 
-    [SerializeField, Range(0, 3)]
-    private int unitIndex;
+    private int _unitIndex;
 
     [SerializeField, Range(0, 100)]
-    private int storedDamage = 0;
+    private int _storedDamage = 0;
 
     [SerializeField]
-    private int hp = 100;
+    private int _hp = 100;
 
     private int _storedHp = 0;
-    
-    public int TeamIndex { get => teamIndex; }    
-    public int StoredHp { get => _storedHp; }
-    public int StoredDamage { get => storedDamage; }
+
+    public int TeamIndex { get => _teamIndex; }
+    public int StoredDamage { get => _storedDamage; }
 
 
-    public int Hp { get => hp; }
+    public int Hp { get => _hp; }
 
     private Material _unitMaterial;
 
@@ -38,7 +35,7 @@ public class UnitInformation : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _unitMaterial = GetComponent<Renderer>().material;
+        _unitMaterial = GetComponent<Renderer>().materials[0];
         _uiHandler = GetComponentInChildren<UnitUIHandler>();
         SetUnitColor();
     }
@@ -46,44 +43,41 @@ public class UnitInformation : MonoBehaviour
     // Sets the indexes of the unit.
     public void SetIndexes(int newTeamIndex, int newUnitIndex)
     {
-        teamIndex = newTeamIndex;
-        unitIndex = newUnitIndex;
+        _teamIndex = newTeamIndex;
+        _unitIndex = newUnitIndex;
     }
 
     public void StoreDamage(float damageAmount)
     {
-        storedDamage += (int)damageAmount;
+        _storedDamage += (int)damageAmount;
     }
 
     public void TakeDamage()
     {
-        // TODO: Make the hp tick down slower ish.
-
-        if (storedDamage == 0) return;
+        if (_storedDamage == 0) return;
 
         if (_storedHp == 0)
         {
-            _storedHp = hp;
+            _storedHp = _hp;
         }
 
-        if (hp > _storedHp - storedDamage && hp >= 0)
+        if (_hp > _storedHp - _storedDamage && _hp >= 0)
         {
-            hp--;
-            _uiHandler.SetPlayerInfoDisplay(hp);
+            _hp--;
+            _uiHandler.SetPlayerInfoDisplay(_hp);
+            return;
+        }
+
+        if (_storedHp - _storedDamage <= 0)
+        {
+            _hp = -1;
         }
         else
         {
-            if (_storedHp - storedDamage <= 0)
-            {
-                hp = -1;
-            }
-            else
-            {
-                hp = _storedHp - storedDamage;
-            }
-            _storedHp = hp;
-            storedDamage = 0;
+            _hp = _storedHp - _storedDamage;
         }
+        _storedHp = _hp;
+        _storedDamage = 0;
     }
 
     public void SetDead()
@@ -93,7 +87,7 @@ public class UnitInformation : MonoBehaviour
 
     public void Heal(int healAmount)
     {
-        hp += healAmount;
+        _hp += healAmount;
     }
 
     // Uses team index to set the color of the unit.
@@ -101,19 +95,21 @@ public class UnitInformation : MonoBehaviour
     private void SetUnitColor()
     {
         var color = Color.white;
-        switch (teamIndex)
+        switch (_teamIndex)
         {
             case 0:
-                color = Color.red;
+                color = new Color32(201, 54, 64, 255);
                 break;
             case 1:
-                color = Color.blue;
+                color = new Color32(66, 135, 245, 255);
                 break;
             case 2:
-                color = Color.green;
+                color = new Color32(153, 229, 80, 255);
                 break;
             case 3:
-                color = Color.yellow;
+                color = new Color32(241, 247, 52, 255);
+                break;
+                default: color = new Color32(255,255,255,255);
                 break;
         }
         _unitMaterial.color = color;

@@ -10,7 +10,8 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/24d45e813e524a99bfb7a145158a7980157a00/d3/7eae6f2e/Quaternion.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Input/Controls.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Game scripts/MainMenuManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Game scripts/Team.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Weapon scripts/Projectiles/Projectile types/BulletProjectile.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -73,7 +74,10 @@
       <workItem from="1663669045137" duration="3522000" />
       <workItem from="1663851007469" duration="2733000" />
       <workItem from="1663934913662" duration="7289000" />
-      <workItem from="1664280915765" duration="1117000" />
+      <workItem from="1664280915765" duration="3737000" />
+      <workItem from="1664363230776" duration="11601000" />
+      <workItem from="1664885596897" duration="5870000" />
+      <workItem from="1664894360603" duration="3150000" />
     </task>
     <servers />
   </component>

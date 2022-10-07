@@ -6,8 +6,8 @@ using UnityEngine.InputSystem;
 public class PlayerInputManager : MonoBehaviour
 {
     private PlayerInput _playerInput;
-    [SerializeField] private Vector2 rawMoveInput;
-    [SerializeField] private Vector2 rawCameraRotateInput;
+    [SerializeField] private Vector2 _rawMoveInput;
+    [SerializeField] private Vector2 _rawCameraRotateInput;
 
     private bool _shouldUpdateInputValue = true;
 
@@ -17,8 +17,8 @@ public class PlayerInputManager : MonoBehaviour
     public InputAction ShootAction { get; private set; }
     public InputAction SwitchUnitAction { get; private set;}
     public InputAction OpenWeaponSelectorAction { get; private set; }
-    public Vector2 RawMoveInput { get => rawMoveInput; }
-    public Vector2 RawCameraRotateInput { get => rawCameraRotateInput; }
+    public Vector2 RawMoveInput { get => _rawMoveInput; }
+    public Vector2 RawCameraRotateInput { get => _rawCameraRotateInput; }
 
     // Start is called before the first frame update
     void Awake()
@@ -38,8 +38,8 @@ public class PlayerInputManager : MonoBehaviour
 
     public void SetAllInputZero()
     {
-        rawMoveInput = Vector2.zero;
-        rawCameraRotateInput = Vector2.zero;
+        _rawMoveInput = Vector2.zero;
+        _rawCameraRotateInput = Vector2.zero;
     }
 
 
@@ -48,8 +48,8 @@ public class PlayerInputManager : MonoBehaviour
     {
         if (_shouldUpdateInputValue)
         {
-            rawMoveInput = _moveAction.ReadValue<Vector2>();
-            rawCameraRotateInput = _rotateCameraAction.ReadValue<Vector2>();
+            _rawMoveInput = _moveAction.ReadValue<Vector2>();
+            _rawCameraRotateInput = _rotateCameraAction.ReadValue<Vector2>();
         }
     }
 
