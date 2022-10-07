@@ -14,9 +14,10 @@ public class GameManager : MonoBehaviour
     private PlayerInputManager _currentInputManager;
     private TurnTimer _turnTimer;
 
+    [SerializeField]
     private int _roundCounter = 0;
     [SerializeField]
-    private GameObject _waterPlane;
+    private GameObject _lavaPlane;
 
     private enum GameStates
     {
@@ -27,22 +28,30 @@ public class GameManager : MonoBehaviour
         GameEnd
     }
 
-    [SerializeField] private GameStates _currentState = GameStates.TurnStart;
+    [SerializeField]
+    private GameStates _currentState = GameStates.TurnStart;
 
-    [SerializeField] private CameraHandler _sceneCamera;
+    [SerializeField] 
+    private CameraHandler _sceneCamera;
 
     private MatchInfo _matchInfo;
 
-    [SerializeField] private GameObject _teamPrefab;
-    [SerializeField] private GameObject _playerPrefab;
+    [SerializeField] 
+    private GameObject _teamPrefab;
+    [SerializeField] 
+    private GameObject _playerPrefab;
 
-    [SerializeField] private Team[] _teams;
-    [SerializeField] private List<Team> _aliveTeams;
+    private Team[] _teams;
+    [SerializeField]
+    private List<Team> _aliveTeams;
 
-    [SerializeField] private List<GameObject> _deadUnits;
-    [SerializeField] private List<GameObject> _damagedUnits;
+    [SerializeField] 
+    private List<GameObject> _deadUnits;
+    [SerializeField] 
+    private List<GameObject> _damagedUnits;
 
-    [SerializeField, Range(0, 3)] private int _currentTurnIndex = 0, _currentUnitIndex = 0;
+    [SerializeField, Range(0, 3)] 
+    private int _currentTurnIndex = 0, _currentUnitIndex = 0;
     private int _unitIndexToUse = 0;
 
     private GameObject _currentTeamCurrentUnitGo;
@@ -318,9 +327,13 @@ public class GameManager : MonoBehaviour
             _currentTurnIndex = 0;
             _roundCounter++;
             roundCounterIncreased = true;
-            _waterPlane.transform.position = Vector3.Lerp(_waterPlane.transform.position,
-                new Vector3(0, _waterPlane.transform.position.y + _roundCounter, 0),
-                _roundCounter / 10);
+            // Raises the lava plane based on the amount of rounds that have been played.
+            if (_roundCounter < 11)
+            {
+                _lavaPlane.transform.localPosition = Vector3.Lerp(_lavaPlane.transform.localPosition,
+                new Vector3(_lavaPlane.transform.localPosition.x, 41, _lavaPlane.transform.localPosition.z),
+                _roundCounter / 10f);
+            }
         }
 
         // The current team active this turns biggest index.

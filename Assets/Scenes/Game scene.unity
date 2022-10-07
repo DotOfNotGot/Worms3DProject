@@ -866,6 +866,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2913024375757928085, guid: 2cfc8a8c93750794eaae3f228162d2ea,
         type: 3}
+      propertyPath: _lavaPlane
+      value: 
+      objectReference: {fileID: 1107420976}
+    - target: {fileID: 2913024375757928085, guid: 2cfc8a8c93750794eaae3f228162d2ea,
+        type: 3}
       propertyPath: _waterPlane
       value: 
       objectReference: {fileID: 1107420976}
@@ -874,6 +879,11 @@ PrefabInstance:
       propertyPath: _sceneCamera
       value: 
       objectReference: {fileID: 74357666}
+    - target: {fileID: 2913024375757928085, guid: 2cfc8a8c93750794eaae3f228162d2ea,
+        type: 3}
+      propertyPath: _roundCounter
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2913024375757928085, guid: 2cfc8a8c93750794eaae3f228162d2ea,
         type: 3}
       propertyPath: _teams.Array.size
@@ -977,9 +987,9 @@ GameObject:
   - component: {fileID: 1107420977}
   - component: {fileID: 1107420980}
   - component: {fileID: 1107420979}
-  - component: {fileID: 1107420978}
+  - component: {fileID: 1107420981}
   m_Layer: 3
-  m_Name: Water
+  m_Name: Lava
   m_TagString: Water
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -993,27 +1003,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1107420976}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 14.7, z: 0}
+  m_LocalPosition: {x: 0, y: 26.2, z: 0}
   m_LocalScale: {x: 20, y: 1, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 463329329}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &1107420978
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1107420976}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1107420979
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1064,6 +1060,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1107420976}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1107420981
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107420976}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 118.31199, z: 10}
+  m_Center: {x: 0, y: -59.155994, z: 0}
 --- !u!1 &1283848876
 GameObject:
   m_ObjectHideFlags: 0

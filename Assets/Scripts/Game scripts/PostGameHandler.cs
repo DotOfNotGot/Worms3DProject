@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class PostGameHandler : MonoBehaviour
 {
@@ -19,11 +20,15 @@ public class PostGameHandler : MonoBehaviour
     [SerializeField]
     private Transform[] _podiumTransforms;
 
+    private TMP_Text _winText;
+
+
 
     // Start is called before the first frame update
     void Awake()
     {
         GetPostMatchInfo();
+        _winText = GetComponentInChildren<TMP_Text>();
     }
 
     private void Start()
@@ -35,6 +40,7 @@ public class PostGameHandler : MonoBehaviour
         else
         {
             _sceneCamera.transform.position = new Vector3(-27, _sceneCamera.transform.position.y, _sceneCamera.transform.position.z);
+            _winText.text = $"Team {_winningTeamUnits[0].GetComponent<UnitInformation>().TeamIndex + 1} won!";
             for (int i = 0; i < _winningTeamUnits.Count; i++)
             {
                 _winningTeamUnits[i].transform.SetParent(_podiumTransforms[i]);
