@@ -33,13 +33,6 @@ public class CameraHandler : MonoBehaviour
 
     [SerializeField] private Camera _thisCamera;
 
-    private bool _readyForRound = true;
-
-    public bool ReadyForRound
-    {
-        get => _readyForRound;
-    }
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -162,11 +155,6 @@ public class CameraHandler : MonoBehaviour
         {
             _focusPoint = targetPoint;
         }
-    }
-
-    public void SetReadyForRoundFalse()
-    {
-        _readyForRound = false;
     }
 
     private Vector3 CameraHalfExtends
