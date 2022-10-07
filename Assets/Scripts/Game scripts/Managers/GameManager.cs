@@ -31,29 +31,30 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameStates _currentState = GameStates.TurnStart;
 
-    [SerializeField] 
+    [SerializeField]
     private CameraHandler _sceneCamera;
 
     private MatchInfo _matchInfo;
 
-    [SerializeField] 
+    [SerializeField]
     private GameObject _teamPrefab;
-    [SerializeField] 
+    [SerializeField]
     private GameObject _playerPrefab;
 
     private Team[] _teams;
     [SerializeField]
     private List<Team> _aliveTeams;
 
-    [SerializeField] 
+    [SerializeField]
     private List<GameObject> _deadUnits;
-    [SerializeField] 
+    [SerializeField]
     private List<GameObject> _damagedUnits;
 
-    [SerializeField, Range(0, 3)] 
+    [SerializeField, Range(0, 3)]
     private int _currentTurnIndex = 0, _currentUnitIndex = 0;
     private int _unitIndexToUse = 0;
-    private int _previousTurnAliveTeamsCount;
+    private bool _hasRemovedTeam = false;
+    private List<int> _removedTeamsIndices;
 
     private GameObject _currentTeamCurrentUnitGo;
 
@@ -69,6 +70,7 @@ public class GameManager : MonoBehaviour
     private bool _gameEnded;
     private void Start()
     {
+        _removedTeamsIndices = new List<int>();
         _turnTimer = GetComponent<TurnTimer>();
         _deadUnits = new List<GameObject>();
         PrepareMatch();
@@ -193,7 +195,6 @@ public class GameManager : MonoBehaviour
 
     private void HandleTurnEnd()
     {
-        _previousTurnAliveTeamsCount = _aliveTeams.Count;
         _hasSetTurnTimer = false;
         _currentTeamCurrentUnitGo.GetComponent<UnitController>().SetHasShot(false);
         DisableUnitsInput();
@@ -297,6 +298,8 @@ public class GameManager : MonoBehaviour
 
             if (_aliveTeams[i].AliveUnits.Count != 0) continue;
 
+            _removedTeamsIndices.Add(_aliveTeams.IndexOf(_aliveTeams[i]));
+            _hasRemovedTeam = true;
             _aliveTeams.Remove(_aliveTeams[i]);
             i = 0;
         }
@@ -319,18 +322,44 @@ public class GameManager : MonoBehaviour
             _currentUnitIndex = biggestUnitIndex;
         }
 
-        if (_currentTurnIndex + 1 < _previousTurnAliveTeamsCount && _previousTurnAliveTeamsCount != _aliveTeams.Count)
+        bool shouldIncrementTurnIndex = true;
+        int decrementAmount = 1;
+        // If any team has completely died check which indices the teams had in the aliveteam list before they were removed.
+        // If only one is smaller or the same as currentTurnIndex there's no need to increment.
+        // If more than one was smaller than currentTurnIndex we instead decrease currentTurnIndex by the amount of teams that were removed.
+        // If all of them were bigger than currentTurnIndex increment as usual.
+        if (_hasRemovedTeam)
         {
-            // Checks if the amount of teams alive has changed, if yes and the currentTurnIndex + 1 isn't greater than the old count don't change the index.
-            // (Setting it to _aliveTeams.Count - 1 in this context is basically the same as leaving it as is. Empty if statements are just weird looking.
-            _currentTurnIndex = _aliveTeams.Count - 1;
+            for (int i = 0; i < _removedTeamsIndices.Count; i++)
+            {
+                if (_removedTeamsIndices[i] <= _currentTurnIndex && shouldIncrementTurnIndex)
+                {
+                    shouldIncrementTurnIndex = false;
+                }
+                else if (_removedTeamsIndices[i] <= _currentTurnIndex)
+                {
+                    decrementAmount++;
+                }
+            }
+            _removedTeamsIndices = new List<int>();
+            _hasRemovedTeam = false;
         }
-        // Checks if turn index + 1 is bigger than teams alive. If it is then go to next round and set the counterbool to true.
-        else if (_currentTurnIndex + 1 < _aliveTeams.Count)
+
+        // Decrements by the ints amount and sets shouldIncrementTurnIndex back to true.
+        if (decrementAmount > 1)
         {
-            _currentTurnIndex += 1;
+            _currentTurnIndex -= decrementAmount;
+            shouldIncrementTurnIndex = true;
         }
-        else
+
+        // Increments the currentTurnIndex even if it's bigger than bounds of array.
+        if (shouldIncrementTurnIndex)
+        {
+            _currentTurnIndex++;
+        }
+
+        // If turnIndex is bigger than the biggest index in aliveTeams start new round.
+        if (_currentTurnIndex > _aliveTeams.Count - 1)
         {
             _currentTurnIndex = 0;
             _roundCounter++;
@@ -352,7 +381,7 @@ public class GameManager : MonoBehaviour
         {
             _currentUnitIndex += 1;
         }
-        else if(roundCounterIncreased)
+        else if (roundCounterIncreased)
         {
             _currentUnitIndex = 0;
         }
@@ -463,7 +492,7 @@ public class GameManager : MonoBehaviour
 
     private void SetThingsForFirstRound()
     {
-        SetCurrentUnitGo(0,0);
+        SetCurrentUnitGo(0, 0);
         DisableUnitsInput();
         SetUnitsWeapons();
         _turnTimer.ResetTurnTimer();
@@ -531,6 +560,5 @@ public class GameManager : MonoBehaviour
             }
             _teams[j].SetAliveUnitsList();
         }
-        _previousTurnAliveTeamsCount = _aliveTeams.Count;
     }
 }
