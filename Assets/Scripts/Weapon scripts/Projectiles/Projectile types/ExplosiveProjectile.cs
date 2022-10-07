@@ -35,6 +35,8 @@ public class ExplosiveProjectile : ProjectileBase
                 currentCollider.GetComponent<UnitInformation>().StoreDamage(Mathf.Clamp(distanceAdjustedDamage, 0f, ProjectileDamage));
 
                 currentCollider.GetComponent<UnitController>().ResetGroundedTimer();
+                currentCollider.GetComponent<UnitController>().SetStepsSinceLastJumped();
+
                 currentCollider.attachedRigidbody.isKinematic = false;
             }
 

@@ -13,8 +13,6 @@ public class ProjectileBase : MonoBehaviour
     [SerializeField]
     private int _maxFramesAlive = 200;
 
-    [SerializeField]
-    private string _projectileSoundKey;
 
     protected ParticleManager _particleManager;
     protected ProjectilePool _projectilePool;

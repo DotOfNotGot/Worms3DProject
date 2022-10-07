@@ -72,7 +72,7 @@ public class WeaponSelector : MonoBehaviour
         }
     }
 
-    public void SelectWeapon()
+    public void SelectWeapon(int weaponIndex)
     {
         foreach (var weapon in _weaponGOs)
         {
@@ -80,16 +80,15 @@ public class WeaponSelector : MonoBehaviour
         }
         CancelWeaponSelect();
         Cursor.visible = false;
-
-        if (_weaponsUIList.value != 0)
+        if (weaponIndex != 0)
         {
-            _currentWeaponGameObject = _weaponGOs[_weaponsUIList.value];
+            _currentWeaponGameObject = _weaponGOs[weaponIndex];
             _currentWeapon = _currentWeaponGameObject.GetComponent<WeaponBase>();
             _currentWeaponGameObject.SetActive(true);
         }
         else
         {
-            _currentWeapon = _weapons[_weaponsUIList.value];
+            _currentWeapon = _weapons[weaponIndex];
         }
         gameObject.GetComponentInParent<UnitController>().SetCurrentWeapon(_currentWeapon);
     }
@@ -108,9 +107,10 @@ public class WeaponSelector : MonoBehaviour
 
     public void SetCurrentWeaponByIndex(int newWeaponIndex)
     {
+        Debug.Log(_weaponGOs.Count);
         if (_weaponGOs.Count != 0)
         {
-            _currentWeapon = _weaponGOs[0].GetComponent<WeaponBase>();
+            _currentWeapon = _weaponGOs[newWeaponIndex].GetComponent<WeaponBase>();
         }
     }
     

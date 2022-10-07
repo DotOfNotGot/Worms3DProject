@@ -8,7 +8,6 @@ public class WeaponBase : MonoBehaviour
     [SerializeField]
     private string _weaponName;
 
-
     [SerializeField]
     private AudioClip _weaponSound;
 
@@ -24,6 +23,8 @@ public class WeaponBase : MonoBehaviour
 
     [SerializeField]
     private int _weaponUses = 1;
+
+    private int _weaponUsesRemaining;
     
     private ProjectilePool _projectilePool;
 
@@ -33,6 +34,7 @@ public class WeaponBase : MonoBehaviour
         _projectilePool = FindObjectOfType<ProjectilePool>();
         _projectilePool.AddWeaponToDict(_weaponName, _projectilePrefab);
         SetInputManager();
+        _weaponUsesRemaining = _weaponUses;
     }
     protected void UseWeapon(float modifier)
     {
@@ -45,10 +47,11 @@ public class WeaponBase : MonoBehaviour
 
     protected void HandleWeaponUses()
     {
-        _weaponUses--;
-        if (_weaponUses == 0)
+        _weaponUsesRemaining--;
+        if (_weaponUsesRemaining <= 0)
         {
             CurrentInputManager.gameObject.GetComponent<UnitController>().SetHasShot(true);
+            _weaponUsesRemaining = _weaponUses;
         }
     }
 

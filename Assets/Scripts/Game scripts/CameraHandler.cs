@@ -9,7 +9,6 @@ public class CameraHandler : MonoBehaviour
 
 
     [SerializeField] private Transform _target;
-    private Transform _oldTarget;
 
     [SerializeField, Range(0f, 20f)] private float _distance = 5f;
 
@@ -26,7 +25,7 @@ public class CameraHandler : MonoBehaviour
     [SerializeField] private LayerMask _obstructionMask = -1;
 
     private Vector3 _focusPoint;
-    Vector2 _orbitAngles = new Vector2(45f, 0f);
+    Vector2 _orbitAngles = new (45f, 0f);
 
     private Vector2 _rotationInput;
 
@@ -40,8 +39,6 @@ public class CameraHandler : MonoBehaviour
     {
         get => _readyForRound;
     }
-
-    private RaycastHit _hit;
 
     // Start is called before the first frame update
     void Awake()
@@ -87,7 +84,6 @@ public class CameraHandler : MonoBehaviour
         if (Physics.BoxCast(castFrom, CameraHalfExtends, castDirection, out RaycastHit hit, lookRotation, castDistance,
                 _obstructionMask))
         {
-            _hit = hit;
             rectPosition = castFrom + castDirection * hit.distance;
             lookPosition = rectPosition - rectOffset;
         }
@@ -97,11 +93,6 @@ public class CameraHandler : MonoBehaviour
 
     public void SetCameraTarget(Transform newTarget)
     {
-        if (_target != null && _target != newTarget)
-        {
-            _oldTarget = _target;
-        }
-
         _target = newTarget;
     }
 
@@ -197,5 +188,4 @@ public class CameraHandler : MonoBehaviour
             _maxVerticalAngle = _minVerticalAngle;
         }
     }
-
 }

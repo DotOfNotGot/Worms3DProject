@@ -138,7 +138,7 @@ MonoBehaviour:
     type: 3}
   _launchForce: 100
   _weaponUses: 2
-  _amountOfBullets: 25
+  _amountOfBullets: 5
   _timeBetweenProjectiles: 0.01
 --- !u!1 &7880598143637750544
 GameObject:

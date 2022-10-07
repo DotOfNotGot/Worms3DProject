@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PostGameHandler : MonoBehaviour
 {
@@ -54,4 +55,10 @@ public class PostGameHandler : MonoBehaviour
         _wasWin = _matchInfo.WasWin;
 
     }
+
+    public void ReturnToMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
 }

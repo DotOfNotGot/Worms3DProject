@@ -5,10 +5,8 @@ using UnityEngine;
 public class UnitInformation : MonoBehaviour
 {
 
-    [SerializeField, Range(0, 3)]
     private int _teamIndex;
 
-    [SerializeField, Range(0, 3)]
     private int _unitIndex;
 
     [SerializeField, Range(0, 100)]
@@ -110,6 +108,8 @@ public class UnitInformation : MonoBehaviour
                 break;
             case 3:
                 color = new Color32(241, 247, 52, 255);
+                break;
+                default: color = new Color32(255,255,255,255);
                 break;
         }
         _unitMaterial.color = color;

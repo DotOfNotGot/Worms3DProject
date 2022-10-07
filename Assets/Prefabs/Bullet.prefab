@@ -112,10 +112,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _projectileRb: {fileID: 4431833837728474445}
-  _projectileDamage: 1
+  _projectileDamage: 5
   _maxFramesAlive: 10
-  _projectileSoundKey: 
-  _bulletPushForce: 10
+  _bulletPushForce: 2
 --- !u!54 &4431833837728474445
 Rigidbody:
   m_ObjectHideFlags: 0

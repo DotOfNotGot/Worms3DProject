@@ -15,6 +15,10 @@ public class UnitController : MonoBehaviour
     [SerializeField]
     private CapsuleCollider _unitCollider;
 
+    private UnitInformation _thisUnitsInfo;
+    private UnitsInputSetter _inputSetter;
+
+
     private Transform _cameraMainTransform;
 
     [Header("Unit Attributes")]
@@ -35,7 +39,7 @@ public class UnitController : MonoBehaviour
     [SerializeField]
     private float _fallMultiplier = 2.5f;
     [SerializeField]
-    private float _groundDrag = 1f;
+    private float _groundDrag = 5f;
     [SerializeField]
     private WeaponBase _currentWeapon;
     [SerializeField]
@@ -74,6 +78,8 @@ public class UnitController : MonoBehaviour
     private void Awake()
     {
         _inputManager = GetComponent<PlayerInputManager>();
+        _thisUnitsInfo = GetComponent<UnitInformation>();
+        _inputSetter = GetComponent<UnitsInputSetter>();
         _distToGround = _unitCollider.bounds.extents.y;
     }
 
@@ -96,14 +102,15 @@ public class UnitController : MonoBehaviour
 
         if (_isGrounded)
         {
-            _unitRb.drag = _groundDrag;
             _shouldAddFallSpeedMultiplier = false;
 
         }
-        else
+
+        if (_thisUnitsInfo.StoredDamage > 0 && _inputManager.enabled == true)
         {
-            _unitRb.drag = 0;
+            _inputSetter.DisableUnitInput(_inputManager);
         }
+
     }
 
     private void FixedUpdate()
@@ -125,6 +132,15 @@ public class UnitController : MonoBehaviour
         if ((_isGrounded || _stepsSinceLastGrounded < 500) && _moveDirection != Vector3.zero)
         {
             OnMove();
+        }
+
+        if (_stepsSinceLastGrounded > 2)
+        {
+            _unitRb.drag = 0;
+        }
+        else
+        {
+            _unitRb.drag = _groundDrag;
         }
 
         if (_isJumping && _isGrounded)
@@ -255,7 +271,7 @@ public class UnitController : MonoBehaviour
 
     private void OnJump()
     {
-        _stepsSinceLastJumped = 0;
+        SetStepsSinceLastJumped();
         _unitRb.velocity = new Vector3(_unitRb.velocity.x, 0, _unitRb.velocity.z);
         _unitRb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
         _isJumping = false;
@@ -268,6 +284,12 @@ public class UnitController : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         _isJumping = false;
     }
+
+    public void SetStepsSinceLastJumped()
+    {
+        _stepsSinceLastJumped = 0;
+    }
+
     private void GroundCheck()
     {
         _groundHits = Physics.SphereCastAll(transform.position, 0.25f, transform.TransformDirection(Vector3.down), _distToGround + 0.1f, 3);

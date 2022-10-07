@@ -30,8 +30,9 @@ public class BulletProjectile : ProjectileBase
             currentCollider.GetComponent<UnitInformation>().StoreDamage(ProjectileDamage);
 
             currentCollider.GetComponent<UnitController>().ResetGroundedTimer();
+            currentCollider.GetComponent<UnitController>().SetStepsSinceLastJumped();
             currentCollider.attachedRigidbody.isKinematic = false;
-            currentCollider.attachedRigidbody.AddForce(ProjectileRb.velocity.normalized * _bulletPushForce);
+            currentCollider.attachedRigidbody.AddForce(transform.up * _bulletPushForce);
         }
 
         _particleManager.PlayParticle("BulletImpact", transform.position);
